@@ -1,0 +1,236 @@
+@charset "UTF-8";
+/* Menu */
+#menu-box, #menu-box-responsive {
+  background-color: #EEEEEE;
+  border-bottom: 1px solid #B0BCC3; }
+
+/* breit in gro├ƒer Ausl├Âsung ausgeblendet */
+#menu-box-responsive {
+  /*Responsive: ausgeblendet*/
+  display: none; }
+
+/*Responsive die responsive-box einblenden*/
+@media only screen and (max-width: 979px) {
+  #menu-box {
+    /*Desktop: ausgeblendet*/
+    display: none; }
+
+  #menu-box-responsive {
+    /*daf├╝r Responsive: eingeblendet*/
+    display: flex; } }
+/* menu-zeile */
+#menu {
+  list-style: none;
+  text-align: left;
+  padding-left: 0px;
+  font: 1.2em Georgia, "Times New Roman", Times, serif;
+  letter-spacing: 1px;
+  position: relative;
+  display: flex; }
+  #menu li {
+    display: flex;
+    text-align: center;
+    line-height: 34px;
+    position: relative;
+    /* Linker Rand bei erstem Menupunkt */ }
+    #menu li:first-child a {
+      border-left: 1px solid #B0BCC3; }
+    #menu li a {
+      text-align: left;
+      float: left;
+      color: #474747;
+      font-weight: normal;
+      padding: 0 18px;
+      border-right: 1px solid #B0BCC3;
+      text-decoration: none;
+      display: inline-block;
+      white-space: nowrap; }
+      #menu li a:hover {
+        color: #006BA3;
+        background-color: #DDDDDD; }
+      #menu li a.active {
+        background-color: #DDDDDD;
+        color: #006BA3; }
+      #menu li a.hamburger {
+        background-image: url("../img/layout/hamburger-menu5.gif");
+        background-repeat: no-repeat;
+        background-size: 26px;
+        background-position-y: 4px;
+        background-position-x: 2px;
+        padding-left: 35px; }
+        #menu li a.hamburger.account {
+          background-image: url("../img/layout/hamburger-menu2.gif"); }
+    #menu li.divider {
+      width: 100%; }
+    #menu li.right-aligned {
+      border-right: 0px;
+      border-left: 1px solid #B0BCC3; }
+    #menu li.user-menu {
+      position: relative; }
+      #menu li.user-menu .submenu-right {
+        display: none; }
+        #menu li.user-menu .submenu-right.show {
+          display: flex;
+          position: absolute;
+          top: 2.35em;
+          right: 0px; }
+      #menu li.user-menu:hover .submenu-right {
+        display: flex;
+        position: absolute;
+        top: 2.35em;
+        right: 0px; }
+      #menu li.user-menu .submenu {
+        position: relative;
+        top: 0px;
+        right: 0px;
+        left: auto; }
+        #menu li.user-menu .submenu li:first-child {
+          border-top: 1px solid #b0bcc3 !important; }
+        #menu li.user-menu .submenu li.headline {
+          text-decoration: underline;
+          font-weight: bold;
+          padding: 0 18px;
+          border-bottom: 0px;
+          width: 100%;
+          white-space: nowrap; }
+
+.submenu {
+  padding-left: 0px;
+  /*ul-links kein Abstand*/
+  border: 1px solid #b0bcc3;
+  border-top: 0px;
+  background-color: #EEEEEE;
+  opacity: 1;
+  position: absolute;
+  top: 2.45em;
+  left: 0px;
+  width: 100%;
+  z-index: 999; }
+  .submenu li {
+    text-align: left;
+    width: 100%;
+    display: inline-block;
+    text-align: left;
+    border-top: 1px solid #b0bcc3; }
+    .submenu li:first-child {
+      border-top: 0px; }
+    .submenu li a {
+      border-right: 0px !important;
+      border-left: 0px !important;
+      width: 100%;
+      display: inline-block;
+      float: none;
+      white-space: nowrap; }
+    .submenu li a:hover {
+      background-color: #DDDDDD; }
+  .submenu .material-icons {
+    position: relative;
+    top: 5px; }
+
+.submenu-parent {
+  position: relative;
+  /*
+  li {
+      border-bottom: 1px solid #b0bcc3;
+  }
+  */ }
+  .submenu-parent:hover .submenu, .submenu-parent.menuClicked .submenu {
+    width: auto;
+    visibility: visible;
+    /* shows sub-menu */
+    opacity: 1;
+    z-index: 999;
+    transform: translateY(0%);
+    transition-delay: 0s, 0s, 0.3s;
+    /* this removes the transition delay so the menu will be visible while the other styles transition */ }
+  .submenu-parent .material-icons {
+    position: relative;
+    top: 5px; }
+
+/*Orginal:*/
+#menuResponsive {
+  position: relative;
+  display: flex;
+  width: 100%;
+  margin: 0 auto;
+  list-style: none;
+  text-align: left;
+  font: 1.2em Georgia, "Times New Roman", Times, serif;
+  letter-spacing: 1px;
+  padding-left: 0px; }
+  #menuResponsive li {
+    display: inline;
+    text-align: center;
+    line-height: 34px; }
+    #menuResponsive li a {
+      float: left;
+      display: block;
+      color: #474747;
+      font-weight: normal;
+      padding: 0 18px;
+      border-right: 1px solid #B0BCC3;
+      text-decoration: none;
+      display: inline-block;
+      white-space: nowrap; }
+      #menuResponsive li a.first {
+        border-left: 1px solid #B0BCC3; }
+      #menuResponsive li a:hover {
+        color: #006BA3; }
+      #menuResponsive li a.active {
+        background-color: #ADDEFF;
+        color: #202020; }
+      #menuResponsive li a.hamburger {
+        background-image: url("../img/layout/hamburger-menu5.gif");
+        background-repeat: no-repeat;
+        background-size: 26px;
+        background-position-y: 4px;
+        background-position-x: 2px;
+        padding-left: 35px; }
+        #menuResponsive li a.hamburger.account {
+          background-image: url("../img/layout/hamburger-menu2.gif"); }
+    #menuResponsive li.divider {
+      width: 100%; }
+    #menuResponsive li.right-aligned {
+      border-right: 0px;
+      border-left: 1px solid #B0BCC3; }
+    #menuResponsive li.user-menu {
+      position: relative; }
+      #menuResponsive li.user-menu .submenu-right {
+        position: absolute;
+        right: 0px;
+        top: 0em; }
+      #menuResponsive li.user-menu ul.submenu {
+        right: 0px;
+        left: auto;
+        position: inherit; }
+        #menuResponsive li.user-menu ul.submenu li.headline {
+          text-decoration: underline;
+          font-style: italic;
+          padding: 0 18px;
+          border-bottom: 0px;
+          white-space: nowrap; }
+  #menuResponsive .submenu {
+    border: 1px solid #b0bcc3;
+    background: #eee;
+    opacity: 1;
+    position: absolute;
+    top: 2.35em;
+    left: -1px;
+    z-index: 999;
+    width: auto; }
+    #menuResponsive .submenu li {
+      border-bottom: 1px solid #b0bcc3;
+      text-align: left;
+      width: 320px;
+      display: inline-block;
+      text-align: left; }
+      #menuResponsive .submenu li a {
+        border-right: 0px;
+        width: 100%;
+        display: inline-block;
+        float: none;
+        white-space: nowrap; }
+    #menuResponsive .submenu .submenu li {
+      padding-left: 10px; }
+
+/*# sourceMappingURL=menu.css.map */

@@ -1,0 +1,10 @@
+class_name: AcceptanceTester
+modules:
+    enabled:
+        - WebDriver:
+            url: 'http://ttkv.localhost/'
+            browser: firefox
+        - Yii2:
+            part: orm, fixtures
+            entryScript: index-test.php
+            cleanup: false

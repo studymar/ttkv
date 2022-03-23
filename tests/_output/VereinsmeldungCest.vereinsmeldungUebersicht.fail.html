@@ -1,0 +1,23 @@
+<html><head></head><body><pre>Exception 'TypeError' with message 'app\models\vereinsmeldung\Vereinsmeldemodul::isDone(): Argument #1 ($vereinsmeldung) must be of type app\models\vereinsmeldung\Vereinsmeldung, null given, called in G:\Meine Ablage\Marks Daten\xampp\htdocs\ttkv\views\vereinsmeldung\_index_items.php on line 18' 
+
+in G:\Meine Ablage\Marks Daten\xampp\htdocs\ttkv\models\vereinsmeldung\Vereinsmeldemodul.php:79
+
+Stack trace:
+#0 G:\Meine Ablage\Marks Daten\xampp\htdocs\ttkv\views\vereinsmeldung\_index_items.php(18): app\models\vereinsmeldung\Vereinsmeldemodul-&gt;isDone(NULL)
+#1 G:\Meine Ablage\Marks Daten\xampp\htdocs\ttkv\vendor\yiisoft\yii2\base\View.php(347): require('G:\\Meine Ablage...')
+#2 G:\Meine Ablage\Marks Daten\xampp\htdocs\ttkv\vendor\yiisoft\yii2\base\View.php(257): yii\base\View-&gt;renderPhpFile('G:\\Meine Ablage...', Array)
+#3 G:\Meine Ablage\Marks Daten\xampp\htdocs\ttkv\vendor\yiisoft\yii2\base\View.php(156): yii\base\View-&gt;renderFile('G:\\Meine Ablage...', Array, NULL)
+#4 G:\Meine Ablage\Marks Daten\xampp\htdocs\ttkv\views\vereinsmeldung\index.php(34): yii\base\View-&gt;render('_index_items', Array)
+#5 G:\Meine Ablage\Marks Daten\xampp\htdocs\ttkv\vendor\yiisoft\yii2\base\View.php(347): require('G:\\Meine Ablage...')
+#6 G:\Meine Ablage\Marks Daten\xampp\htdocs\ttkv\vendor\yiisoft\yii2\base\View.php(257): yii\base\View-&gt;renderPhpFile('G:\\Meine Ablage...', Array)
+#7 G:\Meine Ablage\Marks Daten\xampp\htdocs\ttkv\vendor\yiisoft\yii2\base\View.php(156): yii\base\View-&gt;renderFile('G:\\Meine Ablage...', Array, Object(app\controllers\VereinsmeldungController))
+#8 G:\Meine Ablage\Marks Daten\xampp\htdocs\ttkv\vendor\yiisoft\yii2\base\Controller.php(407): yii\base\View-&gt;render('index', Array, Object(app\controllers\VereinsmeldungController))
+#9 G:\Meine Ablage\Marks Daten\xampp\htdocs\ttkv\controllers\VereinsmeldungController.php(58): yii\base\Controller-&gt;render('index', Array)
+#10 [internal function]: app\controllers\VereinsmeldungController-&gt;actionIndex()
+#11 G:\Meine Ablage\Marks Daten\xampp\htdocs\ttkv\vendor\yiisoft\yii2\base\InlineAction.php(57): call_user_func_array(Array, Array)
+#12 G:\Meine Ablage\Marks Daten\xampp\htdocs\ttkv\vendor\yiisoft\yii2\base\Controller.php(178): yii\base\InlineAction-&gt;runWithParams(Array)
+#13 G:\Meine Ablage\Marks Daten\xampp\htdocs\ttkv\vendor\yiisoft\yii2\base\Module.php(552): yii\base\Controller-&gt;runAction('index', Array)
+#14 G:\Meine Ablage\Marks Daten\xampp\htdocs\ttkv\vendor\yiisoft\yii2\web\Application.php(103): yii\base\Module-&gt;runAction('vereinsmeldung/...', Array)
+#15 G:\Meine Ablage\Marks Daten\xampp\htdocs\ttkv\vendor\yiisoft\yii2\base\Application.php(384): yii\web\Application-&gt;handleRequest(Object(yii\web\Request))
+#16 G:\Meine Ablage\Marks Daten\xampp\htdocs\ttkv\web\index-test.php(16): yii\base\Application-&gt;run()
+#17 {main}</pre></body></html>
