@@ -9,7 +9,7 @@ use yii\filters\VerbFilter;
 use app\models\Verein;
 use app\models\user\User;
 use app\models\user\Right;
-use app\models\Vereinsmeldung\Season;
+use app\models\vereinsmeldung\Season;
 use app\models\vereinsmeldung\Vereinsmeldung;
 use app\models\vereinsmeldung\vereinskontakte\VereinsmeldungKontakte;
 use app\models\vereinsmeldung\vereinskontakte\Person;
