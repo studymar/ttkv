@@ -74,7 +74,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             [['lastlogindate','lockeddate', 'locked','created','passwordforgottentoken','passwordforgottendate'], 'safe'],
             [['validationtoken'], 'unique'],
             [['role_id'], 'integer'],
-            [['role_id'], 'exist', 'targetClass' => '\app\models\user\role', 'targetAttribute' => 'id'],
+            [['role_id'], 'exist', 'targetClass' => Role::className(), 'targetAttribute' => 'id'],
             [['vereins_id'], 'exist', 'skipOnError' => true, 'targetClass' => Verein::className(), 'targetAttribute' => ['vereins_id' => 'id']],
             [['is_validated'], 'integer'],
             
