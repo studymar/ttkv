@@ -4,6 +4,7 @@ namespace app\models\Vereinsmeldung;
 
 use Yii;
 use yii\db\Expression;
+use app\models\vereinsmeldung\Vereinsmeldemodul;
 
 /**
  * This is the model class for table "season".

@@ -3,7 +3,7 @@
 namespace app\models\vereinsmeldung;
 
 use Yii;
-use app\models\Vereinsmeldung\Season;
+use app\models\vereinsmeldung\Season;
 use app\models\Verein;
 use app\models\vereinsmeldung\vereinskontakte\VereinsmeldungKontakte;
 use app\models\vereinsmeldung\teams\VereinsmeldungTeams;
