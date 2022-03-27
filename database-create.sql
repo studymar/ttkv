@@ -471,6 +471,46 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
+-- Table `vereinsmeldung_click_tt`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `vereinsmeldung_click_tt` ;
+
+CREATE TABLE IF NOT EXISTS `vereinsmeldung_click_tt` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `vereinsmeldung_id` INT NOT NULL,
+  `created_at` DATETIME NULL,
+  `done` INT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_vereinsmeldung_click_tt_vereinsmeldung1_idx` (`vereinsmeldung_id` ASC),
+  CONSTRAINT `fk_vereinsmeldung_click_tt_vereinsmeldung1`
+    FOREIGN KEY (`vereinsmeldung_id`)
+    REFERENCES `vereinsmeldung` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `vereinsmeldung_pokal`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `vereinsmeldung_pokal` ;
+
+CREATE TABLE IF NOT EXISTS `vereinsmeldung_pokal` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `vereinsmeldung_id` INT NOT NULL,
+  `created_at` DATETIME NULL,
+  `done` INT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_vereinsmeldung_pokal_vereinsmeldung1_idx` (`vereinsmeldung_id` ASC),
+  CONSTRAINT `fk_vereinsmeldung_pokal_vereinsmeldung1`
+    FOREIGN KEY (`vereinsmeldung_id`)
+    REFERENCES `vereinsmeldung` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Data for table `role`
 -- -----------------------------------------------------
 START TRANSACTION;
@@ -585,8 +625,8 @@ COMMIT;
 START TRANSACTION;
 INSERT INTO `vereinsmeldemodul` (`id`, `name`, `url`, `class_module`) VALUES (1, 'Vereinskontakte eingeben', 'vereinsmeldung/vereinskontakte', 'app\\models\\vereinsmeldung\\vereinskontakte\\VereinsmeldungKontakte');
 INSERT INTO `vereinsmeldemodul` (`id`, `name`, `url`, `class_module`) VALUES (2, 'Mannschaften eingeben', 'vereinsmeldung/teams', 'app\\models\\vereinsmeldung\\teams\\VereinsmeldungTeams');
-INSERT INTO `vereinsmeldemodul` (`id`, `name`, `url`, `class_module`) VALUES (3, 'Vereinsmeldung auch in Click-tt gepflegt?', 'vereinsmeldung/confirmclicktt', NULL);
-INSERT INTO `vereinsmeldemodul` (`id`, `name`, `url`, `class_module`) VALUES (4, 'Pokalmeldung auch in Click-tt gepflegt?', 'vereinsmeldung/confirmpokal', NULL);
+INSERT INTO `vereinsmeldemodul` (`id`, `name`, `url`, `class_module`) VALUES (3, 'Vereinsmeldung auch in Click-tt gepflegt?', 'vereinsmeldung/confirmclicktt', 'app\\models\\vereinsmeldung\\confirmclicktt\\VereinsmeldungClickTT');
+INSERT INTO `vereinsmeldemodul` (`id`, `name`, `url`, `class_module`) VALUES (4, 'Pokalmeldung auch in Click-tt gepflegt?', 'vereinsmeldung/confirmpokal', 'app\\models\\vereinsmeldung\\confirmpokal\\VereinsmeldungPokal');
 INSERT INTO `vereinsmeldemodul` (`id`, `name`, `url`, `class_module`) VALUES (5, 'Abstimmungen für den Verbandstag', 'vereinsmeldung/voting', NULL);
 INSERT INTO `vereinsmeldemodul` (`id`, `name`, `url`, `class_module`) VALUES (6, 'Umfragen für den Verbandstag', 'vereinsmeldung/survey', NULL);
 

@@ -9,12 +9,14 @@ use yii\filters\VerbFilter;
 use app\models\Verein;
 use app\models\user\User;
 use app\models\user\Right;
-use app\models\Vereinsmeldung\Season;
+use app\models\vereinsmeldung\Season;
 use app\models\vereinsmeldung\Vereinsmeldung;
 use app\models\vereinsmeldung\vereinskontakte\VereinsmeldungKontakte;
 use app\models\vereinsmeldung\vereinskontakte\Person;
 use app\models\vereinsmeldung\vereinskontakte\Vereinsrolle;
 use app\models\vereinsmeldung\teams\VereinsmeldungTeams;
+use app\models\vereinsmeldung\confirmclicktt\VereinsmeldungClickTT;
+use app\models\vereinsmeldung\confirmpokal\VereinsmeldungPokal;
 use yii\web\ServerErrorHttpException;
 use yii\base\Exception;
 use app\models\vereinsmeldung\teams\Altersbereich;
@@ -491,7 +493,87 @@ class VereinsmeldungController extends Controller
     }
 
     
+    /**
+     * Click-tt Eingabe bestätigen
+     * @param int $p Vereinsmeldung
+     */
+    public function actionConfirmclicktt($p = false)
+    {
+        try {
+            $user   = Yii::$app->user->identity;
+            $vereinsmeldung = Vereinsmeldung::find()->where(['id'=>$p])->one();
+            
+            if($vereinsmeldung){
+                $model = VereinsmeldungClickTT::getInstance($vereinsmeldung);
+                $model->scenario = "update";
+                if($model->load(Yii::$app->request->post()) && $model->validate() ){
+                    if($model->save()){
+                        $this->redirect (['vereinsmeldung/index','p'=>$vereinsmeldung->id]);
+                    }
+                    else {
+                        Yii::debug(json_encode($model->getErrors()));
+                    }
+                }
+                else {
+                    Yii::debug(json_encode($model->getErrors()));
+                }
+            }
+            else {
+                throw new Exception('ClickTT-Bestaetigung kann nicht ohne Vereinsmeldung für den Verein '.$user->verein->name.' aufgerufen werden');
+            }
+
+            return $this->render('confirmclicktt',[
+                'vereinsmeldung'            => $vereinsmeldung,
+                'model'                     => $model,
+                'user'                      => $user,
+            ]);
+        }
+        catch(\yii\base\Exception $e) {
+            Yii::error($e->getMessage(),__METHOD__);
+            throw new ServerErrorHttpException($e->getMessage());
+        }
+    }
     
+    /**
+     * Click-tt Eingabe bestätigen
+     * @param int $p Vereinsmeldung
+     */
+    public function actionConfirmpokal($p = false)
+    {
+        try {
+            $user   = Yii::$app->user->identity;
+            $vereinsmeldung = Vereinsmeldung::find()->where(['id'=>$p])->one();
+            
+            if($vereinsmeldung){
+                $model = VereinsmeldungPokal::getInstance($vereinsmeldung);
+                $model->scenario = "update";
+                if($model->load(Yii::$app->request->post()) && $model->validate() ){
+                    if($model->save()){
+                        $this->redirect (['vereinsmeldung/index','p'=>$vereinsmeldung->id]);
+                    }
+                    else {
+                        Yii::debug(json_encode($model->getErrors()));
+                    }
+                }
+                else {
+                    Yii::debug(json_encode($model->getErrors()));
+                }
+            }
+            else {
+                throw new Exception('ClickTT-Pokal-Bestaetigung kann nicht ohne Vereinsmeldung für den Verein '.$user->verein->name.' aufgerufen werden');
+            }
+
+            return $this->render('confirmpokal',[
+                'vereinsmeldung'            => $vereinsmeldung,
+                'model'                     => $model,
+                'user'                      => $user,
+            ]);
+        }
+        catch(\yii\base\Exception $e) {
+            Yii::error($e->getMessage(),__METHOD__);
+            throw new ServerErrorHttpException($e->getMessage());
+        }
+    }
     
     
 }
