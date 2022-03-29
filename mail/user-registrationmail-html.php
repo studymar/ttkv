@@ -10,7 +10,7 @@ $text = "
         <br/>
         <a href=\"".Yii::$app->params['domain']."/account/anmeldung-abschliessen/".$user->validationtoken."\">Jetzt bestätigen</a>
         <br/><br/>
-        DEin TTKV Harburg-Land e.V.<br/>
+        Dein TTKV Harburg-Land e.V.<br/>
         ttkv-harburg.de
         </p>
 ";

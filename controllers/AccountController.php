@@ -129,9 +129,12 @@ class AccountController extends Controller
                     //double-opt-in-mail versenden
                     $user = $model->registrate();
                     if($user){
-                        \app\models\mail\MailCollection::sendRegistrationMail($user);
+                        if(\app\models\mail\MailCollection::sendRegistrationMail($user)){
                         //weiterleiten zur end-seite
-                        return $this->redirect(['account/anmeldung-bestaetigen']);
+                            return $this->redirect(['account/anmeldung-bestaetigen']);
+                        }
+                        else
+                            Yii::error ("Registration-Email konnte nicht versendet werden",__METHOD__);
                     }
                 }
                 $model->step = "step3";
