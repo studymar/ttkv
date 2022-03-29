@@ -28,9 +28,9 @@ class MailCollection {
         [
             'user'          => $user,
         ]) // a view rendering result becomes the message body here
-        ->setFrom(Yii::$app->params['senderEmail'])
+        ->setFrom([ Yii::$app->params['senderEmail'] => Yii::$app->params['senderName'] ])
         ->setTo($user->email)
-        ->setSubject(Yii::$app->params['domain']. ' - Bestätigen Sie Ihre Anmeldung')
+        ->setSubject('Bestätigen Sie Ihre Anmeldung')
         ->send();
         
     }
