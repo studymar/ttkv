@@ -24,6 +24,14 @@ interface IFIsVereinsmeldemodul {
      */
     public static function getInstance($vereinsmeldung_id);
 
+    /**
+     * Prueft, ob Meldung gemacht wurde
+     */
+    public function status();
+    /**
+     * Prueft und speichert done, während der Eintragung
+     */
+    public function checkIsDone();
     
     
 }

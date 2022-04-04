@@ -116,6 +116,7 @@ class Team extends \yii\db\ActiveRecord
         $this->vereinsmeldung_teams_id = $vereinsmeldungTeams->id;
         $this->created_at = new \yii\db\Expression("NOW()");
         if($this->save()){
+            $vereinsmeldungTeams->checkIsDone();
             return true;
         }
         Yii::debug($this->getErrors());

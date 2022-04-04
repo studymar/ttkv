@@ -1,6 +1,6 @@
 <?php
 
-namespace app\models\Vereinsmeldung;
+namespace app\models\vereinsmeldung;
 
 use Yii;
 use yii\db\Expression;
@@ -177,5 +177,42 @@ class Season extends \yii\db\ActiveRecord
             return true;
         }
         return false;
-    }    
+    }
+    
+    
+    /**
+     * Prueft, ob ein Modul dazu zugeordnet ist
+     * @param type $vereinsmeldemodul_id
+     */
+    public function hasVereinsmeldemodul($vereinsmeldemodul_id){
+        $module = $this->seasonHasVereinsmeldemodule;
+        if(count($module)){
+            foreach($module as $mod){
+                if($mod->vereinsmeldemodul_id == $vereinsmeldemodul_id)
+                    return true;
+            }
+        }
+        return false;
+    }
+    
+
+    public function getVereinsmeldemodulHeadlines(){
+        //module ins array packen, und dann bei Ausgabe nacheinander ausgeben
+        $module = [];
+        if($this->hasVereinsmeldemodul(Vereinsmeldemodul::$ID_VEREINSMELDUNGKONTAKTE)){
+            $module['K'] = 'Kontakte';
+        }
+        if($this->hasVereinsmeldemodul(Vereinsmeldemodul::$ID_VEREINSMELDUNGTEAMS)){
+            $module['T'] = 'Vereinsmeldung Teams';
+        }
+        if($this->hasVereinsmeldemodul(Vereinsmeldemodul::$ID_VEREINSMELDUNGCLICKTT)){
+            $module['ClV'] = 'Click-tt Vereinsmeldung';
+        }
+        if($this->hasVereinsmeldemodul(Vereinsmeldemodul::$ID_VEREINSMELDUNGPOKAL)){
+            $module['ClP'] = 'Click-tt Pokalmeldung';
+        }
+        return $module;
+    }
+    
+    
 }

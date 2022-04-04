@@ -39,6 +39,10 @@ class VereinsmeldungadminController extends Controller
                         'neededRight'    => Right::ID_RIGHT_VEREINSMELDUNG_ADMIN,
                         'allowedMethods' => [] // or [] for all
                     ],
+                    'vereinsmeldung' => [ // if action is not set, access will be forbidden
+                        'neededRight'    => Right::ID_RIGHT_VEREINSMELDUNG_ADMIN,
+                        'allowedMethods' => [] // or [] for all
+                    ],
                     // all other actions are allowed
                 ],
             ],
@@ -160,5 +164,26 @@ class VereinsmeldungadminController extends Controller
         }        
         
         
-    }    
+    }
+    
+    
+    /**
+     * Vereinsmeldung
+     */
+    public function actionVereinsmeldung()
+    {
+        $season     = Season::getSeason();
+        if($season){
+            $statistic  = Vereinsmeldung::getStatusOfAllVereine($season);
+
+            return $this->render('vereinsmeldung',[
+                'season'            => $season,
+                'statistic'         => $statistic,
+            ]);
+        }
+        else
+            throw new ServerErrorHttpException('Ups...es ist ein Fehler aufgetreten (keine Saison aktiv).');
+    }
+    
+    
 }

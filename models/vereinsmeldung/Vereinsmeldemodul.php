@@ -18,6 +18,14 @@ use app\models\vereinsmeldung\vereinskontakte\VereinsmeldungKontakte;
  */
 class Vereinsmeldemodul extends \yii\db\ActiveRecord
 {
+
+    public static $ID_VEREINSMELDUNGKONTAKTE    = 1;
+    public static $ID_VEREINSMELDUNGTEAMS       = 2;
+    public static $ID_VEREINSMELDUNGCLICKTT     = 3;
+    public static $ID_VEREINSMELDUNGPOKAL       = 4;
+    public static $ID_VEREINSMELDUNGABSTIMMUNGEN= 5;
+    public static $ID_VEREINSMELDUNGUMFRAGEN    = 6;
+
     
     /**
      * {@inheritdoc}

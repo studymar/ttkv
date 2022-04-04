@@ -13,6 +13,8 @@ use app\models\vereinsmeldung\vereinskontakte\Person;
  * @property int $id
  * @property int $vereinsmeldung_id
  * @property string|null $created_at
+ * @property string|null $donedate
+ * @property int $done
  *
  * @property Vereinskontakt[] $vereinskontakte
  * @property Person[] $persons
@@ -37,8 +39,8 @@ class VereinsmeldungKontakte extends \yii\db\ActiveRecord implements IFIsVereins
     {
         return [
             [['id', 'vereinsmeldung_id'], 'required'],
-            [['id', 'vereinsmeldung_id'], 'integer'],
-            [['created_at'], 'safe'],
+            [['id', 'vereinsmeldung_id','done'], 'integer'],
+            [['created_at','donedate'], 'safe'],
             [['id'], 'unique'],
             [['vereinsmeldung_id'], 'exist', 'skipOnError' => true, 'targetClass' => Vereinsmeldung::className(), 'targetAttribute' => ['vereinsmeldung_id' => 'id']],
         ];
@@ -51,6 +53,7 @@ class VereinsmeldungKontakte extends \yii\db\ActiveRecord implements IFIsVereins
     {
         return [
             'id' => 'ID',
+            'Done' => 'Done?',
             'vereinsmeldung_id' => 'Vereinsmeldung ID',
             'created_at' => 'Created',
         ];
@@ -87,6 +90,16 @@ class VereinsmeldungKontakte extends \yii\db\ActiveRecord implements IFIsVereins
         return $this->hasOne(Vereinsmeldung::className(), ['id' => 'vereinsmeldung_id']);
     }
     
+
+    /**
+     * Prueft, ob schon erledigt
+     * @return boolean
+     */
+    public function status(){
+        if($this->countPersons() && $this->hasRequiredVereinsrollen())
+            return true;
+        return false;
+    }
     
     /**
      * Prueft, ob schon erledigt
@@ -160,6 +173,8 @@ class VereinsmeldungKontakte extends \yii\db\ActiveRecord implements IFIsVereins
     public static function create(Vereinsmeldung $vereinsmeldung){
         $item = new VereinsmeldungKontakte();
         $item->id           = 0;
+        $item->done         = 0;
+        $item->donedate     = null;
         $item->vereinsmeldung_id = $vereinsmeldung->id;
         $item->created_at   = new \yii\db\Expression('NOW()');
         if($item->save()){
@@ -178,6 +193,33 @@ class VereinsmeldungKontakte extends \yii\db\ActiveRecord implements IFIsVereins
     public function addContact(Person $person){
         //Person angelegt, dann Vereinsmeldung begonnen
         $this->vereinsmeldung->setStatus(Vereinsmeldung::$STATUS_STARTED);
+    }
+    
+    /**
+     * Prueft und speichert done während des speicherns
+     */
+    public function checkIsDone(){
+        //wenn done und noch nicht gespeichert, dann speichern
+        $status = $this->status();
+        if($status && !$this->done){
+            $this->done     = 1;
+            $this->donedate = new \yii\db\Expression('NOW()');
+            if( $this->save() )
+                return true;
+            else
+                Yii::error ("VereinsmeldungKontakte Done konnte nicht gespeichert werden",__METHOD__);
+        }
+        //wenn nicht mehr done, dann speichern
+        else if (!$status && $this->done){
+            $this->done     = 0;
+            $this->donedate = null;
+            if( $this->save() )
+                return false;
+            else
+                Yii::error ("VereinsmeldungKontakte Done konnte nicht gespeichert werden",__METHOD__);
+        }
+        return $status;
+            
     }
     
 }

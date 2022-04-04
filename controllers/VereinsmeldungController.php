@@ -74,6 +74,14 @@ class VereinsmeldungController extends Controller
                         'neededRight'    => Right::ID_RIGHT_VEREINSMELDUNG,
                         'allowedMethods' => [] // or [] for all
                     ],
+                    'confirmclicktt' => [ // if action is not set, access will be forbidden
+                        'neededRight'    => Right::ID_RIGHT_VEREINSMELDUNG,
+                        'allowedMethods' => [] // or [] for all
+                    ],
+                    'confirmpokal' => [ // if action is not set, access will be forbidden
+                        'neededRight'    => Right::ID_RIGHT_VEREINSMELDUNG,
+                        'allowedMethods' => [] // or [] for all
+                    ],
                     // all other actions are allowed
                 ],
             ],
@@ -266,7 +274,7 @@ class VereinsmeldungController extends Controller
 
     
     /**
-     * Teams / Add Team
+     * Teams / Add Team, nur Auswahl der Altersklasse vor Anlegen des Teams
      * 1.Auswahl Altersbereich
      * @param int $p Vereinsmeldung
      */
@@ -403,8 +411,10 @@ class VereinsmeldungController extends Controller
         try {
             $team           = Team::find()->where(['id'=>$p])->one();
             if($team){
+                $vereinsmeldungTeams = $team->vereinsmeldungTeams;
                 $vereinsmeldung = $team->vereinsmeldungTeams->vereinsmeldung;
                 if($team->delete()){
+                    $vereinsmeldungTeams->checkIsDone();
                     $this->redirect (['vereinsmeldung/teams','p'=>$vereinsmeldung->id]);
                 }
             }
@@ -508,6 +518,7 @@ class VereinsmeldungController extends Controller
                 $model->scenario = "update";
                 if($model->load(Yii::$app->request->post()) && $model->validate() ){
                     if($model->save()){
+                        $model->checkIsDone();
                         $this->redirect (['vereinsmeldung/index','p'=>$vereinsmeldung->id]);
                     }
                     else {
@@ -549,6 +560,7 @@ class VereinsmeldungController extends Controller
                 $model->scenario = "update";
                 if($model->load(Yii::$app->request->post()) && $model->validate() ){
                     if($model->save()){
+                        $model->checkIsDone();
                         $this->redirect (['vereinsmeldung/index','p'=>$vereinsmeldung->id]);
                     }
                     else {

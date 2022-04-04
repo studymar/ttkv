@@ -12,6 +12,7 @@ use app\models\vereinsmeldung\Vereinsmeldung;
  * @property int $id
  * @property int $done
  * @property string|null $created_at
+ * @property string|null $donedate
  * @property int $vereinsmeldung_id
  *
  * @property Vereinsmeldung $vereinsmeldung
@@ -39,7 +40,7 @@ class VereinsmeldungPokal extends \yii\db\ActiveRecord implements IFIsVereinsmel
             [['id', 'vereinsmeldung_id','done'], 'integer'],
             //nur bei save, bei create kann auch 0 sein
             [['done'], 'integer','min'=>1, 'max'=>'1',"tooSmall"=>"Bitte gib zuerst die Pokalmeldung in Click-tt ein", "on"=>"update"],
-            [['created_at'], 'safe'],
+            [['created_at','donedate'], 'safe'],
             [['id'], 'unique'],
             [['vereinsmeldung_id'], 'exist', 'skipOnError' => true, 'targetClass' => Vereinsmeldung::className(), 'targetAttribute' => ['vereinsmeldung_id' => 'id']],
         ];
@@ -82,6 +83,17 @@ class VereinsmeldungPokal extends \yii\db\ActiveRecord implements IFIsVereinsmel
      * Prueft, ob schon erledigt
      * @return boolean
      */
+    public function status(){
+        if($this->done )
+            return true;
+        return false;
+    }    
+    
+    
+    /**
+     * Prueft, ob schon erledigt
+     * @return boolean
+     */
     public static function isDone($vereinsmeldung){
         //wenn Eintrag vorhanden und mind. eine Person dazu gespeichert
         $item = self::getInstance($vereinsmeldung);
@@ -111,6 +123,7 @@ class VereinsmeldungPokal extends \yii\db\ActiveRecord implements IFIsVereinsmel
         $item = new VereinsmeldungPokal();
         $item->id           = 0;
         $item->done         = 0;
+        $item->donedate     = null;
         $item->vereinsmeldung_id = $vereinsmeldung->id;
         $item->created_at   = new \yii\db\Expression('NOW()');
         if($item->save())
@@ -122,5 +135,33 @@ class VereinsmeldungPokal extends \yii\db\ActiveRecord implements IFIsVereinsmel
     public function setdone(){
         $this->done  = 1;
     }    
+
+    /**
+     * Prueft und speichert done während des speicherns
+     */
+    public function checkIsDone(){
+        //wenn done und noch nicht gespeichert, dann speichern
+        $status = $this->status();
+        if($status && !$this->done){
+            $this->done     = 1;
+            $this->donedate = new \yii\db\Expression('NOW()');
+            if( $this->save() )
+                return true;
+            else
+                Yii::error ("VereinsmeldungPokal Done konnte nicht gespeichert werden",__METHOD__);
+        }
+        //wenn nicht mehr done, dann speichern
+        else if (!$status && $this->done){
+            $this->done     = 0;
+            $this->donedate = null;
+            if( $this->save() )
+                return false;
+            else
+                Yii::error ("VereinsmeldungPokal Done konnte nicht gespeichert werden",__METHOD__);
+        }
+        return $status;
+            
+    }
+
     
 }
