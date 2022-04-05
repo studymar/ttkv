@@ -236,7 +236,6 @@ class VereinsmeldungadminController extends Controller
     public function actionTeams($p)
     {
         try {
-            $user   = Yii::$app->user->identity;
             $vereinsmeldung = Vereinsmeldung::find()->where(['id'=>$p])->one();
             
             if($vereinsmeldung){
@@ -636,5 +635,28 @@ class VereinsmeldungadminController extends Controller
         }
     }
     
+
+    /**
+     * Ligeneinteilung
+     * @param int $p Vereinsmeldung
+     */
+    public function actionLigeneinteilung($p = false)
+    {
+        try {
+            $season  = Season::getSeason();
+            if($season === null)
+                throw new Exception('Keine aktive Saison gefunden/angelegt');
+            
+
+            return $this->render('ligeneinteilung',[
+                'season'            => $season,        
+            ]);
+        }
+        catch(\yii\base\Exception $e) {
+            Yii::error($e->getMessage(),__METHOD__);
+            throw new ServerErrorHttpException($e->getMessage());
+        }
+    }
+
     
 }

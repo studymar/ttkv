@@ -16,7 +16,7 @@ IconsAsset::register($this);
 ?>
     <article>
         <!-- Vereinsmeldung Übersicht -->
-        <h2>Vereinsmeldung 2022</h2>
+        <h2>Vereinsmeldung</h2>
         <div>
             <div class="" id="intro">
                 <div>
@@ -68,6 +68,13 @@ IconsAsset::register($this);
                 </tfoot>
             </table>
         </div>
+        
+        <br/><br/>
+        <h3>Übersicht Mannschaften</h3>
+        <ul class="list my-0 py-0" id="">
+            <li><a href="<?= Url::to(['vereinsmeldungadmin/ligeneinteilung']) ?>">Mannschaften/Ligeneinteilung auflisten</a></li>
+        </ul>
+        
     </article>
 
 
