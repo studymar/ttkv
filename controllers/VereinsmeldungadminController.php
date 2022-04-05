@@ -21,6 +21,11 @@ use app\models\vereinsmeldung\teams\LigazusammenstellungHasLiga;
 use app\models\vereinsmeldung\teams\Altersklasse;
 use app\models\vereinsmeldung\teams\Altersbereich;
 use app\models\vereinsmeldung\vereinskontakte\VereinsmeldungKontakte;
+use app\models\vereinsmeldung\vereinskontakte\Vereinsrolle;
+use app\models\vereinsmeldung\vereinskontakte\Vereinskontakt;
+use app\models\vereinsmeldung\vereinskontakte\Person;
+use app\models\vereinsmeldung\confirmclicktt\VereinsmeldungClickTT;
+use app\models\vereinsmeldung\confirmpokal\VereinsmeldungPokal;
 use yii\web\ServerErrorHttpException;
 
 class VereinsmeldungadminController extends Controller
@@ -428,6 +433,208 @@ class VereinsmeldungadminController extends Controller
         }
     }
 
+    /**
+     * Vereinskontakte
+     * @param int $p Vereinsmeldung
+     */
+    public function actionVereinskontakte($p)
+    {
+        try {
+            $vereinsmeldung = Vereinsmeldung::find()->where(['id'=>$p])->one();
+            if($vereinsmeldung){
+                $vereinsmeldungKontakte = VereinsmeldungKontakte::getInstance($vereinsmeldung);
+            }
+            else {
+                throw new Exception('Vereinskontakte können nicht ohne Vereinsmeldung für den Verein '.$vereinsmeldung->verein->name.' aufgerufen werden');
+            }
 
+            return $this->render('vereinskontakte',[
+                'vereinsmeldungKontakte'    => $vereinsmeldungKontakte,
+                'vereinsmeldung'            => $vereinsmeldung,
+            ]);
+        }
+        catch(\yii\base\Exception $e) {
+            Yii::error($e->getMessage(),__METHOD__);
+            throw new ServerErrorHttpException($e->getMessage());
+        }
+    }
+
+    /**
+     * Vereinskontakte / Add Person
+     * @param int $p Vereinsmeldung
+     */
+    public function actionAddPerson($p)
+    {
+        try {
+            $vereinsmeldung = Vereinsmeldung::find()->where(['id'=>$p])->one();
+            $vereinsmeldungKontakte = $vereinsmeldung->vereinsmeldungKontakte;
+            $vereinsrollen          = Vereinsrolle::getVereinsrollen([\app\models\vereinsmeldung\vereinskontakte\Funktionsgruppe::$VEREINSVORSTAND_ID])->select(['name'])->indexBy('id')->column();
+
+            $model = new \app\models\forms\PersonEditForm();
+            if($model->load(Yii::$app->request->post()) && $model->validate() ){
+                $person = new Person();
+                $person = $model->mapToPerson($person);
+                if($person->create($vereinsmeldungKontakte) && $model->saveVereinsrollen($person,$vereinsmeldungKontakte)){
+                    $this->redirect (['vereinsmeldungadmin/vereinskontakte','p'=>$vereinsmeldung->id]);
+                }
+                else {
+                    Yii::debug(json_encode($person->getErrors()));
+                }
+            }
+
+            return $this->render('vereinskontakte_addPerson',[
+                'vereinsmeldungKontakte'    => $vereinsmeldungKontakte,
+                'vereinsrollen'             => $vereinsrollen,
+                'model'                     => $model,
+            ]);
+
+        }
+        catch(\yii\base\Exception $e) {
+            Yii::error($e->getMessage(),__METHOD__);
+            throw new ServerErrorHttpException('Ups...ein Fehler. Die Person kann nicht angelegt werden.');
+        }
+        
+    }
+    
+    /**
+     * Vereinskontakte / Edit Person
+     * @param int $p Person Id
+     */
+    public function actionEditPerson($p)
+    {
+        try {
+            $person = Person::find()->where(['id'=>$p])->one();
+            if($person){
+                $vereinsmeldungKontakte = $person->vereinsmeldungKontakte;
+                $vereinsmeldung         = $vereinsmeldungKontakte->vereinsmeldung;
+                $vereinsrollen          = Vereinsrolle::getVereinsrollen([\app\models\vereinsmeldung\vereinskontakte\Funktionsgruppe::$VEREINSVORSTAND_ID])->select(['name'])->indexBy('id')->column();
+
+                $model = new \app\models\forms\PersonEditForm();
+                $model->mapFromPerson($person);
+                if($model->load(Yii::$app->request->post()) && $model->validate() ){
+                    $person = $model->mapToPerson($person);
+                    if($person->save() && $model->saveVereinsrollen($person,$vereinsmeldungKontakte)){
+                        $this->redirect (['vereinsmeldungadmin/vereinskontakte','p'=>$vereinsmeldung->id]);
+                    }
+                    else {
+                        Yii::debug(json_encode($person->getErrors()));
+                    }
+                }
+
+                return $this->render('vereinskontakte_editPerson',[
+                    'vereinsmeldungKontakte'    => $vereinsmeldungKontakte,
+                    'vereinsrollen'             => $vereinsrollen,
+                    'model'                     => $model,
+                    'person'                    => $person,
+                ]);
+            }
+            throw new Exception('Upps...Person wurde nicht gefunden.');
+        }
+        catch(\yii\base\Exception $e) {
+            Yii::error($e->getMessage(),__METHOD__);
+            throw new ServerErrorHttpException("Upps...ein Fehler. Die Person kann nicht bearbeitet werden.");
+        }
+        
+    }
+
+    /**
+     * Löschen einer Person
+     * @param int $p Person Id
+     */
+    public function actionDeletePerson($p)
+    {
+        try {
+            $person         = Person::find()->where(['id'=>$p])->one();
+            $vereinsmeldung = $person->vereinsmeldungKontakte->vereinsmeldung;
+            if($person->deletePerson()){
+                $this->redirect (['vereinsmeldungadmin/vereinskontakte','p'=>$vereinsmeldung->id]);
+            }
+        }
+        catch(\yii\base\Exception $e) {
+            Yii::error($e->getMessage(),__METHOD__);
+            throw new ServerErrorHttpException("Upps...ein Fehler. Die Person kann nicht gelöscht werden.");
+        }
+    }
+    
+    /**
+     * Click-tt Eingabe bestätigen
+     * @param int $p Vereinsmeldung
+     */
+    public function actionConfirmclicktt($p = false)
+    {
+        try {
+            $vereinsmeldung = Vereinsmeldung::find()->where(['id'=>$p])->one();
+            
+            if($vereinsmeldung){
+                $model = VereinsmeldungClickTT::getInstance($vereinsmeldung);
+                $model->scenario = "update";
+                if($model->load(Yii::$app->request->post()) && $model->validate() ){
+                    if($model->save()){
+                        $model->checkIsDone();
+                        $this->redirect (['vereinsmeldungadmin/vereinsmeldung-verein','p'=>$vereinsmeldung->id]);
+                    }
+                    else {
+                        Yii::debug(json_encode($model->getErrors()));
+                    }
+                }
+                else {
+                    Yii::debug(json_encode($model->getErrors()));
+                }
+            }
+            else {
+                throw new Exception('ClickTT-Bestaetigung kann nicht ohne Vereinsmeldung für den Verein '.$user->verein->name.' aufgerufen werden');
+            }
+
+            return $this->render('confirmclicktt',[
+                'vereinsmeldung'            => $vereinsmeldung,
+                'model'                     => $model,
+            ]);
+        }
+        catch(\yii\base\Exception $e) {
+            Yii::error($e->getMessage(),__METHOD__);
+            throw new ServerErrorHttpException($e->getMessage());
+        }
+    }
+
+    /**
+     * Click-tt Eingabe bestätigen
+     * @param int $p Vereinsmeldung
+     */
+    public function actionConfirmpokal($p = false)
+    {
+        try {
+            $vereinsmeldung = Vereinsmeldung::find()->where(['id'=>$p])->one();
+            
+            if($vereinsmeldung){
+                $model = VereinsmeldungPokal::getInstance($vereinsmeldung);
+                $model->scenario = "update";
+                if($model->load(Yii::$app->request->post()) && $model->validate() ){
+                    if($model->save()){
+                        $model->checkIsDone();
+                        $this->redirect (['vereinsmeldungadmin/vereinsmeldung-verein','p'=>$vereinsmeldung->id]);
+                    }
+                    else {
+                        Yii::debug(json_encode($model->getErrors()));
+                    }
+                }
+                else {
+                    Yii::debug(json_encode($model->getErrors()));
+                }
+            }
+            else {
+                throw new Exception('ClickTT-Pokal-Bestaetigung kann nicht ohne Vereinsmeldung für den Verein '.$user->verein->name.' aufgerufen werden');
+            }
+
+            return $this->render('confirmpokal',[
+                'vereinsmeldung'            => $vereinsmeldung,
+                'model'                     => $model,
+            ]);
+        }
+        catch(\yii\base\Exception $e) {
+            Yii::error($e->getMessage(),__METHOD__);
+            throw new ServerErrorHttpException($e->getMessage());
+        }
+    }
+    
     
 }
