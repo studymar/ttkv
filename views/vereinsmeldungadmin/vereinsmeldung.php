@@ -41,7 +41,7 @@ IconsAsset::register($this);
                     ?>
                 <tr>
                     <td><?= $count++ ?></td>
-                    <td><a href="<?= Url::toRoute(['vereinsmeldungadmin/vereinsmeldung','p'=>$vereinsmeldung->id]); ?>"><?= $vereinsmeldung->verein->name ?></a></td>
+                    <td><a href="<?= Url::toRoute(['vereinsmeldungadmin/vereinsmeldung-verein','p'=>$vereinsmeldung->id]); ?>"><?= $vereinsmeldung->verein->name ?></a></td>
                     <?php foreach($module as $modKey => $mod){ 
                         $abgegebenString = ($mod)? "Abgegeben am ". app\models\helpers\DateConverter::convert($mod->donedate)." Uhr" : "Noch nicht abgegeben";
                         ?>

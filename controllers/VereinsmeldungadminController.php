@@ -11,6 +11,15 @@ use app\models\user\User;
 use app\models\user\Right;
 use app\models\vereinsmeldung\Season;
 use app\models\vereinsmeldung\Vereinsmeldung;
+use app\models\vereinsmeldung\teams\VereinsmeldungTeams;
+use app\models\vereinsmeldung\teams\Team;
+use app\models\forms\TeamAltersbereichForm;
+use app\models\forms\TeamEditForm;
+use app\models\vereinsmeldung\teams\Liga;
+use app\models\vereinsmeldung\teams\Ligazusammenstellung;
+use app\models\vereinsmeldung\teams\LigazusammenstellungHasLiga;
+use app\models\vereinsmeldung\teams\Altersklasse;
+use app\models\vereinsmeldung\teams\Altersbereich;
 use app\models\vereinsmeldung\vereinskontakte\VereinsmeldungKontakte;
 use yii\web\ServerErrorHttpException;
 
@@ -184,6 +193,241 @@ class VereinsmeldungadminController extends Controller
         else
             throw new ServerErrorHttpException('Ups...es ist ein Fehler aufgetreten (keine Saison aktiv).');
     }
+
+
+    /**
+     * Übersicht Vereinsmeldung eines Vereins
+     * @param int $p Vereinsmeldung 
+     */
+    public function actionVereinsmeldungVerein($p)
+    {
+        try {
+            $season  = Season::getSeason();
+            if($season === null)
+                throw new Exception('Keine aktive Saison gefunden/angelegt');
+            $modules = $season->vereinsmeldemodule;
+            $vereinsmeldung = Vereinsmeldung::find()->where(['id'=>$p])->one();
+            $verein  = $vereinsmeldung->verein;
+
+            return $this->render('vereinsmeldung-verein',[
+                'modules' => $modules,
+                'season'  => $season,
+                'verein'  => $verein,
+                'vereinsmeldung' => $vereinsmeldung,
+            ]);
+        }
+        catch(\yii\base\Exception $e) {
+            Yii::error($e->getMessage(),__METHOD__);
+            throw new ServerErrorHttpException($e->getMessage());
+        }
+    }
+
+
     
+    /**
+     * Vereinsmeldung
+     * @param int $p Vereinsmeldung 
+     */
+    public function actionTeams($p)
+    {
+        try {
+            $user   = Yii::$app->user->identity;
+            $vereinsmeldung = Vereinsmeldung::find()->where(['id'=>$p])->one();
+            
+            if($vereinsmeldung){
+                $vereinsmeldungTeams = VereinsmeldungTeams::getInstance($vereinsmeldung);
+            }
+            else {
+                throw new Exception('Teams können nicht ohne Vereinsmeldung für den Verein '.$vereinsmeldung->verein->name.' aufgerufen werden');
+            }
+
+            return $this->render('teams',[
+                'vereinsmeldung'            => $vereinsmeldung,
+                'teams'                     => $vereinsmeldungTeams->teams,
+            ]);
+        }
+        catch(\yii\base\Exception $e) {
+            Yii::error($e->getMessage(),__METHOD__);
+            throw new ServerErrorHttpException($e->getMessage());
+        }
+    }
+
+    /**
+     * Teams / Add Team, nur Auswahl der Altersklasse vor Anlegen des Teams
+     * 1.Auswahl Altersbereich
+     * @param int $p Vereinsmeldung
+     */
+    public function actionAddTeamAltersbereich($p)
+    {
+        try {
+            $vereinsmeldung = Vereinsmeldung::find()->where(['id'=>$p])->one();
+            $vereinsmeldungTeams = $vereinsmeldung->vereinsmeldungTeams;
+            $altersbereiche = Altersbereich::find()->select(['name'])->indexBy('id')->column();
+            $model          = new \app\models\forms\TeamAltersbereichForm();
+
+            if($model->load(Yii::$app->request->post()) && $model->validate() ){
+                $this->redirect (['vereinsmeldungadmin/add-team','p'=>$p,'p2'=>$model->altersbereich_id]);
+            }
+            
+            return $this->render('vereinsmeldung_addteam_altersbereich',[
+                'altersbereiche'    => $altersbereiche,
+                'model'             => $model,
+                'vereinsmeldungTeams'=> $vereinsmeldungTeams,
+            ]);
+        }
+        catch(\yii\base\Exception $e) {
+            Yii::error($e->getMessage(),__METHOD__);
+            throw new ServerErrorHttpException('Ups...ein Fehler. Der Altersbereich kann nicht gewählt werden.');
+        }
+    }
+
+    /**
+     * Teams / Add Team
+     * @param int $p Vereinsmeldung
+     * @param int $p Altersbereich_id
+     */
+    public function actionAddTeam($p,$p2)
+    {
+        try {
+            $vereinsmeldung = Vereinsmeldung::find()->where(['id'=>$p])->one();
+            $vereinsmeldungTeams = $vereinsmeldung->vereinsmeldungTeams;
+            $user   = Yii::$app->user->identity;
+            $altersbereich  = Altersbereich::find()->where(['id'=>$p2])->one();
+            $altersklassen  = Altersklasse::find()->where(['altersbereich_id'=>$altersbereich->id])->select(['name'])->indexBy('id')->column();
+            $ligenzusammenstellung = Ligazusammenstellung::find()->where(['altersbereich_id'=>$altersbereich->id])->one();
+            $ligen          = $ligenzusammenstellung->getLigen()->select(['name'])->indexBy('id')->column();
+            $regional       = Liga::$regional;
+
+            $model = new \app\models\forms\TeamEditForm();
+            $model->altersbereich_id = $altersbereich->id;
+            if($altersbereich && $model->load(Yii::$app->request->post()) && $model->validate() ){
+                $team = new Team();
+                $team = $model->mapToTeam($team);
+                if($team->create($vereinsmeldungTeams)){
+                    $this->redirect (['vereinsmeldungadmin/teams','p'=>$vereinsmeldung->id]);
+                }
+                else {
+                    Yii::debug(json_encode($team->getErrors()));
+                }
+            }
+            else {
+                Yii::debug(json_encode($model->getErrors()));
+            }
+            return $this->render('vereinsmeldung_addteam',[
+                'vereinsmeldungTeams'       => $vereinsmeldungTeams,
+                'model'                     => $model,
+                'altersbereich'             => $altersbereich,
+                'altersklassen'             => $altersklassen,
+                'ligen'                     => $ligen,
+                'regional'                  => $regional,
+            ]);
+
+        }
+        catch(\yii\base\Exception $e) {
+            Yii::error($e->getMessage(),__METHOD__);
+            throw new ServerErrorHttpException('Ups...ein Fehler. Das Team kann nicht angelegt werden.');
+        }
+        
+    }
+
+    /**
+     * Teams / Edit Team
+     * @param int $p Vereinsmeldung
+     * @param int $p2 Team_id
+     */
+    public function actionEditTeam($p,$p2)
+    {
+        try {
+            $vereinsmeldung = Vereinsmeldung::find()->where(['id'=>$p])->one();
+            $vereinsmeldungTeams = $vereinsmeldung->vereinsmeldungTeams;
+            $user   = Yii::$app->user->identity;
+            $team   = Team::find()->where(['id'=>$p2])->one();
+            $altersbereich  = $team->altersklasse->altersbereich;
+            $altersklassen  = Altersklasse::find()->where(['altersbereich_id'=>$altersbereich->id])->select(['name'])->indexBy('id')->column();
+            $ligenzusammenstellung = Ligazusammenstellung::find()->where(['altersbereich_id'=>$altersbereich->id])->one();
+            $ligen          = $ligenzusammenstellung->getLigen()->select(['name'])->indexBy('id')->column();
+            $regional       = Liga::$regional;
+
+            $model = new \app\models\forms\TeamEditForm();
+            $model->altersbereich_id = $altersbereich->id;
+            $model->mapFromTeam($team,$altersbereich);
+            if($team && $model->load(Yii::$app->request->post()) && $model->validate() ){
+                $team = $model->mapToTeam($team);
+                if($team->save()){
+                    $this->redirect (['vereinsmeldungadmin/teams','p'=>$vereinsmeldung->id]);
+                }
+                else {
+                    Yii::debug(json_encode($team->getErrors()));
+                }
+            }
+            else {
+                Yii::debug(json_encode($model->getErrors()));
+            }
+            return $this->render('vereinsmeldung_editteam',[
+                'vereinsmeldungTeams'       => $vereinsmeldungTeams,
+                'model'                     => $model,
+                'team'                      => $team,
+                'altersbereich'             => $altersbereich,
+                'altersklassen'             => $altersklassen,
+                'ligen'                     => $ligen,
+                'regional'                  => $regional,
+            ]);
+
+        }
+        catch(\yii\base\Exception $e) {
+            Yii::error($e->getMessage(),__METHOD__);
+            throw new ServerErrorHttpException('Ups...ein Fehler. Das Team kann nicht angelegt werden.');
+        }
+        
+    }
+
+    /**
+     * Löschen eines Teams
+     * @param int $p Team Id
+     */
+    public function actionDeleteTeam($p)
+    {
+        try {
+            $team           = Team::find()->where(['id'=>$p])->one();
+            if($team){
+                $vereinsmeldungTeams = $team->vereinsmeldungTeams;
+                $vereinsmeldung = $team->vereinsmeldungTeams->vereinsmeldung;
+                if($team->delete()){
+                    $vereinsmeldungTeams->checkIsDone();
+                    $this->redirect (['vereinsmeldungadmin/teams','p'=>$vereinsmeldung->id]);
+                }
+            }
+        }
+        catch(\yii\base\Exception $e) {
+            Yii::error($e->getMessage(),__METHOD__);
+            throw new ServerErrorHttpException("Upps...ein Fehler. Das Team kann nicht gelöscht werden.");
+        }
+    }
+
+    /**
+     * Teams / Meldet keine Mannschaft im Verein und beendet damit die Mannschafteintragung
+     * @param int $p Vereinsmeldung
+     */
+    public function actionNoTeams($p)
+    {
+        try {
+            $vereinsmeldung = Vereinsmeldung::find()->where(['id'=>$p])->one();
+            $vereinsmeldungTeams = $vereinsmeldung->vereinsmeldungTeams;
+            
+            $vereinsmeldungTeams->setnoteamsflag();
+            if($vereinsmeldungTeams->save()){
+                $this->redirect (['vereinsmeldungadmin/vereinsmeldung-verein','p'=>$vereinsmeldung->id]);
+            }
+            else
+                $this->redirect (['vereinsmeldungadmin/teams','p'=>$vereinsmeldung->id]);
+            
+        }
+        catch(\yii\base\Exception $e) {
+            Yii::error($e->getMessage(),__METHOD__);
+            throw new ServerErrorHttpException('Ups...ein Fehler. Die Eintragung keiner Teams kann nicht gewählt werden.');
+        }
+    }
+
+
     
 }
