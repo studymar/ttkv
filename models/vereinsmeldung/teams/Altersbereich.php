@@ -3,6 +3,7 @@
 namespace app\models\vereinsmeldung\teams;
 
 use Yii;
+use app\models\vereinsmeldung\teams\Ligazusammenstellung;
 
 /**
  * This is the model class for table "altersbereich".
@@ -68,4 +69,22 @@ class Altersbereich extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Ligazusammenstellung::className(), ['altersbereich_id' => 'id']);
     }
+    
+    
+    /**
+     * Gibt eine Liste mit Ligen und deren zugeordneten Mannschaften zurück
+     * @param int $season_id
+     * @param int $altersbereich_id
+     * @return Team[] key=liganame / value=Team
+     */
+    public static function getLigeneinteilungOfAltersbereich($season, int $altersbereich_id){
+        $ligazusammenstellung   = Ligazusammenstellung::find()->where(['altersbereich_id'=>$altersbereich_id])->one();
+        $ligen                  = $ligazusammenstellung->ligen;
+        foreach($ligen as $liga){
+           $teams[$liga->name] = Team::find()->where(['liga_id'=>$liga->id, 'season_id'=>$season->id])->all();
+        }
+        
+        return $teams;
+    }
+    
 }

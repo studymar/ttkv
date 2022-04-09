@@ -70,9 +70,11 @@ IconsAsset::register($this);
         </div>
         
         <br/><br/>
-        <h3>Übersicht Mannschaften</h3>
+        <h3>Übersicht gemeldete Mannschaften</h3>
         <ul class="list my-0 py-0" id="">
-            <li><a href="<?= Url::to(['vereinsmeldungadmin/ligeneinteilung']) ?>">Mannschaften/Ligeneinteilung auflisten</a></li>
+            <?php foreach($allAltersbereiche as $bereich){ ?>
+            <li><a href="<?= Url::to(['vereinsmeldungadmin/ligeneinteilung','p'=>$bereich->id]) ?>">Mannschaften/Ligeneinteilung <?= $bereich->name ?></a></li>
+            <?php } ?>
         </ul>
         
     </article>

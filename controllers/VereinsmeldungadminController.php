@@ -189,10 +189,12 @@ class VereinsmeldungadminController extends Controller
         $season     = Season::getSeason();
         if($season){
             $statistic  = Vereinsmeldung::getStatusOfAllVereine($season);
+            $allAltersbereiche = Altersbereich::find()->all();
 
             return $this->render('vereinsmeldung',[
                 'season'            => $season,
                 'statistic'         => $statistic,
+                'allAltersbereiche'=> $allAltersbereiche,
             ]);
         }
         else
@@ -638,7 +640,7 @@ class VereinsmeldungadminController extends Controller
 
     /**
      * Ligeneinteilung
-     * @param int $p Vereinsmeldung
+     * @param int $p Altersbereich_id
      */
     public function actionLigeneinteilung($p = false)
     {
@@ -647,9 +649,12 @@ class VereinsmeldungadminController extends Controller
             if($season === null)
                 throw new Exception('Keine aktive Saison gefunden/angelegt');
             
-
+            $altersbereich   = Altersbereich::find()->where(['id'=>$p])->one();
+            $ligeneinteilung = Altersbereich::getLigeneinteilungOfAltersbereich($season,$p);
             return $this->render('ligeneinteilung',[
-                'season'            => $season,        
+                'season'           => $season,  
+                'ligeneinteilung'  => $ligeneinteilung,
+                'altersbereich'    => $altersbereich,
             ]);
         }
         catch(\yii\base\Exception $e) {

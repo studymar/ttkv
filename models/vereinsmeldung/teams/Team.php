@@ -10,6 +10,7 @@ use Yii;
  * @property int $id
  * @property int $vereinsmeldung_teams_id
  * @property int $altersklasse_id
+ * @property int $number
  * @property int $liga_id
  * @property int $weeks
  * @property string|null $regional
@@ -45,8 +46,8 @@ class Team extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'vereinsmeldung_teams_id', 'altersklasse_id', 'liga_id'], 'required'],
-            [['id', 'vereinsmeldung_teams_id', 'altersklasse_id', 'liga_id', 'pokalteilnahme', 'weeks'], 'integer'],
+            [['id', 'season_id', 'vereinsmeldung_teams_id', 'altersklasse_id', 'liga_id'], 'required'],
+            [['id', 'season_id', 'vereinsmeldung_teams_id', 'altersklasse_id', 'number', 'liga_id', 'pokalteilnahme', 'weeks'], 'integer'],
             [['created_at'], 'safe'],
             [['heimspieltage','regional'], 'string', 'max' => 255],
             [['id'], 'unique'],
@@ -111,9 +112,15 @@ class Team extends \yii\db\ActiveRecord
         ];
     }
     
+    public static function countTeamsOfVereinInAltersklasse($vereinsmeldungTeams,$altersklasse){
+        return Team::find()->where(['altersklasse_id'=>$altersklasse->id, 'vereinsmeldung_teams_id'=>$vereinsmeldungTeams->id])->count();
+    }
+    
     public function create(VereinsmeldungTeams $vereinsmeldungTeams){
-        $this->id = 0;
+        $this->id           = 0;
+        $this->season_id    = $vereinsmeldungTeams->vereinsmeldung->season_id;
         $this->vereinsmeldung_teams_id = $vereinsmeldungTeams->id;
+        $this->number       = Team::countTeamsOfVereinInAltersklasse($this->vereinsmeldungTeams, $this->altersklasse)+1;
         $this->created_at = new \yii\db\Expression("NOW()");
         if($this->save()){
             $vereinsmeldungTeams->checkIsDone();

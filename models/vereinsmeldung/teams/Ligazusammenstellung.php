@@ -12,7 +12,7 @@ use Yii;
  * @property int $altersbereich_id
  *
  * @property Altersbereich $altersbereich
- * @property Liga[] $ligas
+ * @property Liga[] $ligen
  * @property LigazusammenstellungHasLiga[] $ligazusammenstellungHasLigas
  */
 class Ligazusammenstellung extends \yii\db\ActiveRecord
