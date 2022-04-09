@@ -1971,7 +1971,10 @@ class WebDriver extends CodeceptionModule implements
             return $els[0]->getText();
         }
 
-        if (@preg_match($cssOrXPathOrRegex, $this->webDriver->getPageSource(), $matches)) {
+        if (
+            is_string($cssOrXPathOrRegex)
+            && @preg_match($cssOrXPathOrRegex, $this->webDriver->getPageSource(), $matches)
+        ) {
             return $matches[1];
         }
 
@@ -2081,7 +2084,7 @@ class WebDriver extends CodeceptionModule implements
                 'Number of elements counted differs from expected range'
             );
         } else {
-            $this->assertEquals(
+            $this->assertSame(
                 $expected,
                 $counted,
                 'Number of elements counted differs from expected number'
@@ -2104,7 +2107,7 @@ class WebDriver extends CodeceptionModule implements
                 'Number of elements counted differs from expected range'
             );
         } else {
-            $this->assertEquals(
+            $this->assertSame(
                 $expected,
                 $counted,
                 'Number of elements counted differs from expected number'
@@ -3489,7 +3492,7 @@ class WebDriver extends CodeceptionModule implements
      */
     public function seeNumberOfTabs($number): void
     {
-        $this->assertEquals(count($this->webDriver->getWindowHandles()), $number);
+        $this->assertSame(count($this->webDriver->getWindowHandles()), $number);
     }    
 
     /**

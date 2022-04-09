@@ -107,6 +107,7 @@ class Vereinskontakt extends \yii\db\ActiveRecord
                 throw new Exception($newItem->getErrors());
             }
         }
+        $vereinsmeldungKontakte->checkIsDone();
         return true;
     }
 }

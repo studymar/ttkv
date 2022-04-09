@@ -7,6 +7,9 @@ use app\models\vereinsmeldung\Season;
 use app\models\Verein;
 use app\models\vereinsmeldung\vereinskontakte\VereinsmeldungKontakte;
 use app\models\vereinsmeldung\teams\VereinsmeldungTeams;
+use app\models\vereinsmeldung\confirmclicktt\VereinsmeldungClickTT;
+use app\models\vereinsmeldung\confirmpokal\VereinsmeldungPokal;
+use app\models\vereinsmeldung\Vereinsmeldemodul;
 
 /**
  * This is the model class for table "vereinsmeldung".
@@ -18,6 +21,8 @@ use app\models\vereinsmeldung\teams\VereinsmeldungTeams;
  * @property string|null $status
  * @property VereinsmeldungKontakte[] $vereinsmeldungKontakte
  * @property VereinsmeldungTeams[] $vereinsmeldungTeams
+ * @property VereinsmeldungClickTT[] $vereinsmeldungClickTT
+ * @property VereinsmeldungPokal[] $vereinsmeldungPokal
  *
  * @property Season $season
  * @property Verein $verein
@@ -104,6 +109,26 @@ class Vereinsmeldung extends \yii\db\ActiveRecord
     {
         return $this->hasOne(VereinsmeldungTeams::className(), ['vereinsmeldung_id' => 'id']);
     }
+
+    /**
+     * Gets query for [[VereinsmeldungClickTT]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getVereinsmeldungClickTT()
+    {
+        return $this->hasOne(VereinsmeldungClickTT::className(), ['vereinsmeldung_id' => 'id']);
+    }
+
+    /**
+     * Gets query for [[VereinsmeldungPokal]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getVereinsmeldungPokal()
+    {
+        return $this->hasOne(VereinsmeldungPokal::className(), ['vereinsmeldung_id' => 'id']);
+    }
     
     
     /**
@@ -121,7 +146,7 @@ class Vereinsmeldung extends \yii\db\ActiveRecord
     }
     
     /**
-     * Prüft, ob die Vereinsmeldung bereits von einem Verein gepflegt wurde
+     * Prüft, ob die Vereinsmeldung bereits von mind. einem Verein gepflegt wurde
      * @param type $season
      */
     public static function isStarted($season){
@@ -172,6 +197,37 @@ class Vereinsmeldung extends \yii\db\ActiveRecord
             return false;
         return true;
     }    
+
+
+    /**
+     * Gibt die Vereinsmeldung aller Vereine zur Seaison zurück
+     * @param type $season [optional} Default alktuelle Saison
+     * @return type
+     */
+    public static function getStatusOfAllVereine($season = false){
+        if(!$season)
+            $season = Season::getSeason();
+        $all    = Vereinsmeldung::find()->where(["season_id"=>$season->id])->orderBy('vereins_id asc')->all();
+        return $all;
+        
+    }    
     
+    public function getVereinsmeldemodulInstances(){
+        //module ins array packen, und dann bei Ausgabe nacheinander ausgeben
+        $module = [];
+        if($this->season->hasVereinsmeldemodul(Vereinsmeldemodul::$ID_VEREINSMELDUNGKONTAKTE)){
+            $module['Kontakte'] = ($this->vereinsmeldungKontakte)?$this->vereinsmeldungKontakte:null;
+        }
+        if($this->season->hasVereinsmeldemodul(Vereinsmeldemodul::$ID_VEREINSMELDUNGTEAMS)){
+            $module['Vereinsmeldung Teams'] = ($this->vereinsmeldungTeams)?$this->vereinsmeldungTeams:null;
+        }
+        if($this->season->hasVereinsmeldemodul(Vereinsmeldemodul::$ID_VEREINSMELDUNGCLICKTT)){
+            $module['Click-tt Vereinsmeldung'] = ($this->vereinsmeldungClickTT)?$this->vereinsmeldungClickTT:null;
+        }
+        if($this->season->hasVereinsmeldemodul(Vereinsmeldemodul::$ID_VEREINSMELDUNGPOKAL)){
+            $module['Click-tt Pokalmeldung'] = ($this->vereinsmeldungPokal)?$this->vereinsmeldungPokal:null;
+        }
+        return $module;
+    }
     
 }

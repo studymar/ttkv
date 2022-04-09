@@ -62,6 +62,7 @@ class TeamEditForm extends Model {
         $this->altersklasse_id  = $item->altersklasse_id;
         $this->heimspieltage    = $item->heimspieltage;
         $this->weeks            = $item->weeks;
+        $this->regional         = $item->regional;
         $this->pokalteilnahme   = $item->pokalteilnahme;
         $this->created_at       = $item->created_at;
         
@@ -73,6 +74,7 @@ class TeamEditForm extends Model {
         $item->altersklasse_id     = $this->altersklasse_id;
         $item->heimspieltage       = $this->heimspieltage;
         $item->weeks               = $this->weeks;
+        $item->regional            = $this->regional;
         $item->pokalteilnahme      = $this->pokalteilnahme;
         $item->created_at          = $this->created_at;
         return $item;

@@ -11,6 +11,7 @@ use Yii;
  * @property string|null $name
  * @property string|null $inactive
  * @property int|null $sort
+ * @property int $askregional
  *
  * @property LigazusammenstellungHasLiga[] $ligazusammenstellungHasLigas
  * @property Ligazusammenstellung[] $ligazusammenstellungs
@@ -40,7 +41,7 @@ class Liga extends \yii\db\ActiveRecord
     {
         return [
             [['id'], 'required'],
-            [['id', 'sort'], 'integer'],
+            [['id', 'sort','askregional'], 'integer'],
             [['inactive'], 'safe'],
             [['name'], 'string', 'max' => 255],
             [['id'], 'unique'],
@@ -71,11 +72,11 @@ class Liga extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[Ligazusammenstellungs]].
+     * Gets query for [[Ligazusammenstellungen]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getLigazusammenstellungs()
+    public function getLigazusammenstellungen()
     {
         return $this->hasMany(Ligazusammenstellung::className(), ['id' => 'ligazusammenstellung_id'])->via('ligazusammenstellungHasLigas');
     }
