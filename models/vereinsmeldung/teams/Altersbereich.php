@@ -13,7 +13,7 @@ use app\models\vereinsmeldung\teams\Ligazusammenstellung;
  * @property int $askweeks
  * @property int $askpokal
  *
- * @property Altersklasse[] $altersklasses
+ * @property Altersklasse[] $altersklassen
  * @property Ligazusammenstellung[] $ligazusammenstellungs
  */
 class Altersbereich extends \yii\db\ActiveRecord
@@ -55,7 +55,7 @@ class Altersbereich extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getAltersklasses()
+    public function getAltersklassen()
     {
         return $this->hasMany(Altersklasse::className(), ['altersbereich_id' => 'id']);
     }
@@ -75,16 +75,21 @@ class Altersbereich extends \yii\db\ActiveRecord
      * Gibt eine Liste mit Ligen und deren zugeordneten Mannschaften zurück
      * @param int $season_id
      * @param int $altersbereich_id
-     * @return Team[] key=liganame / value=Team
+     * @return [] [altersklassennamekey => [liganame => value=Team]]
      */
     public static function getLigeneinteilungOfAltersbereich($season, int $altersbereich_id){
         $ligazusammenstellung   = Ligazusammenstellung::find()->where(['altersbereich_id'=>$altersbereich_id])->one();
         $ligen                  = $ligazusammenstellung->ligen;
-        foreach($ligen as $liga){
-           $teams[$liga->name] = Team::find()->where(['liga_id'=>$liga->id, 'season_id'=>$season->id])->all();
+        $altersbereich          = Altersbereich::find()->where(['id'=>$altersbereich_id])->one();
+        $ligeneinteilung = [];
+        foreach($altersbereich->altersklassen as $altersklasse){
+            $teams = [];
+            foreach($ligen as $liga){
+               $teams[$liga->name] = Team::find()->where(['liga_id'=>$liga->id, 'altersklasse_id'=>$altersklasse->id, 'season_id'=>$season->id])->all();
+            }
+            $ligeneinteilung[$altersklasse->name] = $teams;
         }
-        
-        return $teams;
+        return $ligeneinteilung;
     }
     
 }

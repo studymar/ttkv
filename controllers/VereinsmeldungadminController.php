@@ -27,6 +27,7 @@ use app\models\vereinsmeldung\vereinskontakte\Person;
 use app\models\vereinsmeldung\confirmclicktt\VereinsmeldungClickTT;
 use app\models\vereinsmeldung\confirmpokal\VereinsmeldungPokal;
 use yii\web\ServerErrorHttpException;
+use app\models\vereinsmeldung\teams\ExcelExportLigeneinteilung;
 
 class VereinsmeldungadminController extends Controller
 {
@@ -57,6 +58,15 @@ class VereinsmeldungadminController extends Controller
                         'neededRight'    => Right::ID_RIGHT_VEREINSMELDUNG_ADMIN,
                         'allowedMethods' => [] // or [] for all
                     ],
+                    'ligeneinteilung' => [ // if action is not set, access will be forbidden
+                        'neededRight'    => Right::ID_RIGHT_VEREINSMELDUNG_ADMIN,
+                        'allowedMethods' => [] // or [] for all
+                    ],
+                    'ligeneinteilungExcelExport' => [ // if action is not set, access will be forbidden
+                        'neededRight'    => Right::ID_RIGHT_VEREINSMELDUNG_ADMIN,
+                        'allowedMethods' => [] // or [] for all
+                    ],
+                    
                     // all other actions are allowed
                 ],
             ],
@@ -656,6 +666,29 @@ class VereinsmeldungadminController extends Controller
                 'ligeneinteilung'  => $ligeneinteilung,
                 'altersbereich'    => $altersbereich,
             ]);
+        }
+        catch(\yii\base\Exception $e) {
+            Yii::error($e->getMessage(),__METHOD__);
+            throw new ServerErrorHttpException($e->getMessage());
+        }
+    }
+
+    /**
+     * Ligeneinteilung Export
+     * @param int $p Altersbereich_id
+     */
+    public function actionLigeneinteilungExcelExport($p = false)
+    {
+        try {
+            $season  = Season::getSeason();
+            if($season === null)
+                throw new Exception('Keine aktive Saison gefunden/angelegt');
+            
+            $altersbereich   = Altersbereich::find()->where(['id'=>$p])->one();
+            $ligeneinteilung = Altersbereich::getLigeneinteilungOfAltersbereich($season,$p);
+            
+            ExcelExportLigeneinteilung::getLigeneinteilung($season, $altersbereich, $ligeneinteilung);
+            
         }
         catch(\yii\base\Exception $e) {
             Yii::error($e->getMessage(),__METHOD__);
