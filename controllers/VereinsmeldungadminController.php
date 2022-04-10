@@ -688,6 +688,7 @@ class VereinsmeldungadminController extends Controller
             $ligeneinteilung = Altersbereich::getLigeneinteilungOfAltersbereich($season,$p);
             
             ExcelExportLigeneinteilung::getLigeneinteilung($season, $altersbereich, $ligeneinteilung);
+            exit;
             
         }
         catch(\yii\base\Exception $e) {
