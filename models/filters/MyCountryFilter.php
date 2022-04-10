@@ -74,7 +74,7 @@ class MyCountryFilter extends \yii\base\ActionFilter
         $req_city 		= (isset($_SERVER['GEOIP_CITY']))?$_SERVER['GEOIP_CITY']:'';
         
         if($req_country_code!="" && $req_country_code != "DE" && $req_country_code != "AT" && $req_country_code != "ES"){
-            Yii::debug("IP:".Yii::$app->getRequest()->getUserIP() ." Country: ".$req_country_code. "Forbidden", __METHOD__);
+            Yii::error("IP:".Yii::$app->getRequest()->getUserIP() ." Country: ".$req_country_code. "Forbidden", __METHOD__);
             return $this->denyAccess();
         }
         
