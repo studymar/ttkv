@@ -87,6 +87,10 @@ $config = [
             'locale' => 'de-DE',
             'defaultTimeZone' => 'Europe/Berlin',
         ],
+        'geoip' => [
+            'class' => 'dpodium\yii2\geoip\components\CGeoIP',
+            'support_ipv6' => false, //Default value
+        ],        
         'assetManager' => [
             'converter' => [
                 'class' => 'yii\web\AssetConverter',

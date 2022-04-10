@@ -48,4 +48,13 @@ return array (
       '@yii/debug' => $vendorDir . '/yiisoft/yii2-debug/src',
     ),
   ),
+  'dpodium/yii2-geoip' => 
+  array (
+    'name' => 'dpodium/yii2-geoip',
+    'version' => '2.1.4.0',
+    'alias' => 
+    array (
+      '@dpodium/yii2/geoip' => $vendorDir . '/dpodium/yii2-geoip',
+    ),
+  ),
 );

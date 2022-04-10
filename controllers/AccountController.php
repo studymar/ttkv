@@ -48,6 +48,9 @@ class AccountController extends Controller
                     // all other actions are allowed
                 ],
             ],
+            'access' => [
+                'class' => \app\models\filters\MyCountryFilter::class
+            ],
         ];
     }
     
