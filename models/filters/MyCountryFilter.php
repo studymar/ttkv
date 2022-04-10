@@ -3,6 +3,7 @@ namespace app\models\filters;
 
 use Yii;
 use yii\web\ForbiddenHttpException;
+use dpodium\yii2\geoip\components\CGeoIP;
 
 /**
  * To add MyAccessControl add this in behaviour of your Controller
@@ -50,10 +51,11 @@ class MyCountryFilter extends \yii\base\ActionFilter
     public function init()
     {
         parent::init();
-        $location = Yii::$app->geoip->lookupLocation(Yii::$app->getRequest()->getUserIP());
-        $this->countryCode = Yii::$app->geoip->lookupCountryCode();
-        $this->countryCode = $location;
-        $this->countryName = Yii::$app->geoip->lookupCountryName();
+//        $location = Yii::$app->geoip->lookupLocation(Yii::$app->getRequest()->getUserIP());
+//        $this->countryCode = Yii::$app->geoip->lookupCountryCode();
+//        $this->countryCode = $location->countryCode;
+//        $this->countryName = Yii::$app->geoip->lookupCountryName();
+//        $this->countryName = $location->countryName;
     }
 
     /**
@@ -64,12 +66,19 @@ class MyCountryFilter extends \yii\base\ActionFilter
      */
     public function beforeAction($action)
     {
-        echo $this->countryCode." ".$this->countryName;
-        Yii::debug("IP:".Yii::$app->getRequest()->getUserIP() ." Country: ".$this->countryCode." ".$this->countryName, __METHOD__);
+        //Aufrufe aus dem Ausland ausschließen
+        $req_continent 		= (isset($_SERVER['GEOIP_CONTINENT_CODE']))?$_SERVER['GEOIP_CONTINENT_CODE']:'';
+        $req_country_code	= (isset($_SERVER['GEOIP_COUNTRY_CODE']))?$_SERVER['GEOIP_COUNTRY_CODE']:'';
+        $req_country_name	= (isset($_SERVER['GEOIP_COUNTRY_NAME']))?$_SERVER['GEOIP_COUNTRY_NAME']:'';
+        $req_region             = (isset($_SERVER['GEOIP_REGION_NAME']))?$_SERVER['GEOIP_REGION_NAME']:'';
+        $req_city 		= (isset($_SERVER['GEOIP_CITY']))?$_SERVER['GEOIP_CITY']:'';
+        
+        if($req_country_code!="" && $req_country_code != "DE" && $req_country_code != "AT" && $req_country_code != "ES"){
+            Yii::debug("IP:".Yii::$app->getRequest()->getUserIP() ." Country: ".$req_country_code. "Forbidden", __METHOD__);
+            return $this->denyAccess();
+        }
+        
         return true;
-        /*
-        return $this->errorResponseForbidden();
-        */
     }
     
     /**
@@ -79,13 +88,9 @@ class MyCountryFilter extends \yii\base\ActionFilter
      * @param User|false $user the current user or boolean `false` in case of detached User component
      * @throws ForbiddenHttpException if the user is already logged in or in case of detached User component.
      */
-    protected function denyAccess($user)
+    protected function denyAccess()
     {
-        if ($user !== null || $user->getIsGuest()) {
-            $user->loginRequired();
-        } else {
-            throw new ForbiddenHttpException(Yii::t('yii', 'You are not allowed to perform this action.'));
-        }
+        throw new ForbiddenHttpException(Yii::t('yii', 'From your Position it is not allowed to perform this action.'));
     }
 
 }
