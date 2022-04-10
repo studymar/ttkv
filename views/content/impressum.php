@@ -20,7 +20,7 @@
                 <br><br>
                 Vertretungsberechtigt:<br>
                 Mark Worthmann, Vorsitzender<br>
-                Ole Wisch 29, 21224 Buchholz, Telefon: 01785317188, eMail: info@ttkv-harburg.de
+                Bretagnestr.8a, 21641 Apensen, Telefon: 01785317188, eMail: info@ttkv-harburg.de
                 <br><br>
                 Sofern Beiträge mit Namen gekennzeichnet sind, tragen diese Personen die Verantwortung für die Inhalte.
                 <br><br>
