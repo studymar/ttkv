@@ -17,10 +17,11 @@ class ExcelExportLigeneinteilung extends \yii\base\Model
 
     public static function getLigeneinteilung($season, $altersbereich, $ligeneinteilung) {
         $writer = WriterEntityFactory::createXLSXWriter();
-        // $writer = WriterEntityFactory::createCSVWriter();
-
+        //$writer = WriterEntityFactory::createCSVWriter();
+       
         //$writer->openToFile($filePath); // write data to a file or to a PHP stream
         $writer->openToBrowser('Ligeneinteilung-'.$altersbereich->name.'.xlsx'); // stream data directly to the browser        
+        //$writer->openToBrowser('Ligeneinteilung-'.$altersbereich->name.'.csv'); // stream data directly to the browser        
 
         foreach($ligeneinteilung as $altersklasse=>$ligen){
             $emptyCell  = [WriterEntityFactory::createCell("")];
