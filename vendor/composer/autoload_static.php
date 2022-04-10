@@ -14,8 +14,8 @@ class ComposerStaticInitb1ebc95c6847f00c08199c1c01ffcdc2
         'e69f7f6ee287b969198c3c9d6777bd38' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/bootstrap.php',
         '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
         '8825ede83f2f289127722d4e842cf7e8' => __DIR__ . '/..' . '/symfony/polyfill-intl-grapheme/bootstrap.php',
-        'b6b991a57620e2fb6b2f66f03fe9ddc2' => __DIR__ . '/..' . '/symfony/string/Resources/functions.php',
         '0d59ee240a4cd96ddbb4ff164fccea4d' => __DIR__ . '/..' . '/symfony/polyfill-php73/bootstrap.php',
+        'b6b991a57620e2fb6b2f66f03fe9ddc2' => __DIR__ . '/..' . '/symfony/string/Resources/functions.php',
         '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         'e3b2795a8a512b6083af088fb53afe6c' => __DIR__ . '/..' . '/codeception/codeception/functions.php',
         '2cffec82183ee1cea088009cef9a6fc3' => __DIR__ . '/..' . '/ezyang/htmlpurifier/library/HTMLPurifier.composer.php',
@@ -41,6 +41,10 @@ class ComposerStaticInitb1ebc95c6847f00c08199c1c01ffcdc2
         'p' => 
         array (
             'phpDocumentor\\Reflection\\' => 25,
+        ),
+        'd' => 
+        array (
+            'dpodium\\yii2\\geoip\\' => 19,
         ),
         'c' => 
         array (
@@ -80,9 +84,16 @@ class ComposerStaticInitb1ebc95c6847f00c08199c1c01ffcdc2
             'Psr\\Container\\' => 14,
             'Prophecy\\' => 9,
         ),
+        'M' => 
+        array (
+            'MaxMind\\WebService\\' => 19,
+            'MaxMind\\Exception\\' => 18,
+            'MaxMind\\Db\\' => 11,
+        ),
         'G' => 
         array (
             'GuzzleHttp\\Psr7\\' => 16,
+            'GeoIp2\\' => 7,
         ),
         'F' => 
         array (
@@ -101,6 +112,7 @@ class ComposerStaticInitb1ebc95c6847f00c08199c1c01ffcdc2
         ),
         'C' => 
         array (
+            'Composer\\CaBundle\\' => 18,
             'Codeception\\PHPUnit\\' => 20,
             'Codeception\\Extension\\' => 22,
             'Codeception\\' => 12,
@@ -145,6 +157,10 @@ class ComposerStaticInitb1ebc95c6847f00c08199c1c01ffcdc2
             0 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
             1 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
             2 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
+        ),
+        'dpodium\\yii2\\geoip\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/dpodium/yii2-geoip',
         ),
         'cebe\\markdown\\' => 
         array (
@@ -251,9 +267,25 @@ class ComposerStaticInitb1ebc95c6847f00c08199c1c01ffcdc2
         array (
             0 => __DIR__ . '/..' . '/phpspec/prophecy/src/Prophecy',
         ),
+        'MaxMind\\WebService\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/maxmind/web-service-common/src/WebService',
+        ),
+        'MaxMind\\Exception\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/maxmind/web-service-common/src/Exception',
+        ),
+        'MaxMind\\Db\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/maxmind-db/reader/src/MaxMind/Db',
+        ),
         'GuzzleHttp\\Psr7\\' => 
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/psr7/src',
+        ),
+        'GeoIp2\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/geoip2/geoip2/src',
         ),
         'Faker\\' => 
         array (
@@ -279,6 +311,10 @@ class ComposerStaticInitb1ebc95c6847f00c08199c1c01ffcdc2
         array (
             0 => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy',
         ),
+        'Composer\\CaBundle\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/composer/ca-bundle/src',
+        ),
         'Codeception\\PHPUnit\\' => 
         array (
             0 => __DIR__ . '/..' . '/codeception/phpunit-wrapper/src',
@@ -289,9 +325,9 @@ class ComposerStaticInitb1ebc95c6847f00c08199c1c01ffcdc2
         ),
         'Codeception\\' => 
         array (
-            0 => __DIR__ . '/..' . '/codeception/verify/src/Codeception',
+            0 => __DIR__ . '/..' . '/codeception/codeception/src/Codeception',
             1 => __DIR__ . '/..' . '/codeception/stub/src',
-            2 => __DIR__ . '/..' . '/codeception/codeception/src/Codeception',
+            2 => __DIR__ . '/..' . '/codeception/verify/src/Codeception',
         ),
         'Box\\Spout\\' => 
         array (
