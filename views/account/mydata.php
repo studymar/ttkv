@@ -38,7 +38,7 @@ use yii\bootstrap4\Html;
                     <br/>
 
                     <div class="form-group">
-                        <a href="<?= Url::toRoute(['usermanager/index']) ?>" class="btn btn-outline-secondary">Abbrechen</a>
+                        <a href="<?= Url::toRoute(['account/home']) ?>" class="btn btn-outline-secondary">Abbrechen</a>
                         <?= Html::submitButton('Speichern', ['class' => 'btn btn-primary','id'=>'mydata-submit-btn']) ?>
                     </div>
                 </div>
@@ -58,7 +58,7 @@ use yii\bootstrap4\Html;
                     </div>
                     
                     <div class="form-group">
-                        <a href="<?= Url::toRoute(['usermanager/index']) ?>" class="btn btn-outline-secondary">Abbrechen</a>
+                        <a href="<?= Url::toRoute(['account/home']) ?>" class="btn btn-outline-secondary">Abbrechen</a>
                         <?= Html::submitButton('Speichern', ['class' => 'btn btn-primary','id'=>'changepassword-submit-btn']) ?>
                     </div>
                     
