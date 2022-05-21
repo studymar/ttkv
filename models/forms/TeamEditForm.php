@@ -33,6 +33,7 @@ class TeamEditForm extends Model {
             [['altersbereich_id', 'altersklasse_id', 'liga_id', 'pokalteilnahme','weeks'], 'integer'],
             [['created_at'], 'safe'],
             [['heimspieltage','regional'], 'string', 'max' => 255],
+            [['heimspieltage'], 'match', 'pattern' => '/\([^)]*\)/', 'message'=>'Bitte folgendes Beispielformat einhalten: Mo(20:00)'],
             [['id'], 'safe'],
             [['altersbereich_id'], 'exist', 'skipOnError' => true, 'targetClass' => Altersbereich::className(), 'targetAttribute' => ['altersbereich_id' => 'id']],
             [['altersklasse_id'], 'exist', 'skipOnError' => true, 'targetClass' => Altersklasse::className(), 'targetAttribute' => ['altersklasse_id' => 'id']],
