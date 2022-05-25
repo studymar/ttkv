@@ -39,31 +39,31 @@ class VereinsmeldungadminController extends Controller
                 'class' => MyAccessControl::class,
                 'rules' => [
                     'index' => [ // if action is not set, access will be forbidden
-                        'neededRight'    => Right::ID_RIGHT_VEREINSMELDUNG_ADMIN,
+                        'neededRight'    => Right::ID_RIGHT_VEREINSMELDUNG_KONFIGURIEREN,
                         'allowedMethods' => [] // or [] for all
                     ],
                     'create-season' => [ // if action is not set, access will be forbidden
-                        'neededRight'    => Right::ID_RIGHT_VEREINSMELDUNG_ADMIN,
+                        'neededRight'    => Right::ID_RIGHT_VEREINSMELDUNG_KONFIGURIEREN,
                         'allowedMethods' => [] // or [] for all
                     ],
                     'edit-season' => [ // if action is not set, access will be forbidden
-                        'neededRight'    => Right::ID_RIGHT_VEREINSMELDUNG_ADMIN,
+                        'neededRight'    => Right::ID_RIGHT_VEREINSMELDUNG_KONFIGURIEREN,
                         'allowedMethods' => [] // or [] for all
                     ],
                     'delete-season' => [ // if action is not set, access will be forbidden
-                        'neededRight'    => Right::ID_RIGHT_VEREINSMELDUNG_ADMIN,
+                        'neededRight'    => Right::ID_RIGHT_VEREINSMELDUNG_KONFIGURIEREN,
                         'allowedMethods' => [] // or [] for all
                     ],
                     'vereinsmeldung' => [ // if action is not set, access will be forbidden
-                        'neededRight'    => Right::ID_RIGHT_VEREINSMELDUNG_ADMIN,
+                        'neededRight'    => Right::ID_RIGHT_VEREINSMELDUNGEN_EINSEHEN,
                         'allowedMethods' => [] // or [] for all
                     ],
                     'ligeneinteilung' => [ // if action is not set, access will be forbidden
-                        'neededRight'    => Right::ID_RIGHT_VEREINSMELDUNG_ADMIN,
+                        'neededRight'    => Right::ID_RIGHT_VEREINSMELDUNGEN_EINSEHEN,
                         'allowedMethods' => [] // or [] for all
                     ],
                     'ligeneinteilungExcelExport' => [ // if action is not set, access will be forbidden
-                        'neededRight'    => Right::ID_RIGHT_VEREINSMELDUNG_ADMIN,
+                        'neededRight'    => Right::ID_RIGHT_VEREINSMELDUNGEN_EINSEHEN,
                         'allowedMethods' => [] // or [] for all
                     ],
                     
@@ -75,7 +75,7 @@ class VereinsmeldungadminController extends Controller
     
 
     /**
-     * Übersicht
+     * Übersicht Vereinsmeldung konfigurieren
      */
     public function actionIndex()
     {
