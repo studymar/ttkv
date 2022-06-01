@@ -23,7 +23,12 @@ use yii\bootstrap4\Html;
             <?php $form = ActiveForm::begin(FormHelper::getConfigArray());?>
                 <br/>
                 <div id="">
-                    <div class="mb-3">
+                    <div class="fst-italic">
+                        Pokalmeldung muss in Click-tt im Zeitraum 20.6.-1.7. abgegeben werden.
+                        <br>(gleichzeitig mit der Mannschaftsmeldung)
+                    <div>
+
+                    <div class="mb-3 mt-5">
                         <label for="vereinsmeldungpokal-done" class="form-label">Click-tt Pokalmeldung abgegeben?</label>
                         <?= $form->field($model, 'done')->label(false)->dropDownList([1=>'Ja',0=>'Nein']) ?>
                     </div>
