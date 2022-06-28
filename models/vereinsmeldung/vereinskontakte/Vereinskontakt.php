@@ -104,7 +104,7 @@ class Vereinskontakt extends \yii\db\ActiveRecord
             $newItem->person_id                 = $person->id;
             $newItem->created_at                = new \yii\db\Expression("NOW()");
             if(!$newItem->save()){
-                throw new Exception($newItem->getErrors());
+                throw new Exception(\yii\helpers\Json::encode($newItem->getErrors()));
             }
         }
         $vereinsmeldungKontakte->checkIsDone();

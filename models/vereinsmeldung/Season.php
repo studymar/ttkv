@@ -91,7 +91,7 @@ class Season extends \yii\db\ActiveRecord
     
     /**
      * Laedt eine Saison
-     * @param int $season [optional] ID Default=aktuell
+     * @param int $season [optional] ID Default= aktive Saison
      */
     public static function getSeason($season = false){
         if($season)
@@ -112,6 +112,7 @@ class Season extends \yii\db\ActiveRecord
     /**
      * Laedt eine Saison
      * @param string $season [optional] Name Default=aktuell
+     * @return Season
      */
     public static function getSeasonByName($season = false){
         if($season)

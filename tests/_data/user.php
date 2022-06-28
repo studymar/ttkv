@@ -2,7 +2,7 @@
 use \app\models\helpers\DateConverter;
 
 $actualDateTime = DateConverter::getNow();
-$counter = 12;
+$counter = 13;
 
 
 return [
@@ -204,24 +204,7 @@ return [
         'locked' => null,
         'lockeddate' => null,
     ],
-//    'VereinsmeldeUser' => [
-//        'id' => '12',
-//        'firstname' => 'Vereinsmelde',
-//        'lastname' => 'User',
-//        'email' => 'vereinsmeldung@ttkv-harburg.de',
-//        'password' => '$2y$10$bNyOi9GtYMeWeLLS5VWP1O34qiBbtj7ihOeKNeca9vgQIIUdBra5i',
-//        'created' => $actualDateTime,
-//        'role_id' => '1',
-//        'vereins_id' => '27',
-//        'is_validated' => '1',
-//        'validationtoken' => null,
-//        'lastlogindate' => null,
-//        'token' => null,
-//        'passwordforgottentoken' => null,
-//        'passwordforgottendate' => null,
-//        'locked' => null,
-//        'lockeddate' => null,
-//    ],
-    Page\Acceptance\user\VereinsmeldeUserTestdata::getUser()
+    Page\Acceptance\user\VereinsmeldeUserTestdata::getUser(),
+    Page\Acceptance\user\EditdataUserTestdata::getUser()
     
 ];

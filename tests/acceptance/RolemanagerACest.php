@@ -1,11 +1,14 @@
 <?php
 
 use yii\helpers\Url;
+use Page\Acceptance\Fixturedata;
 
 class RolemanagerACest
 {
     public function _fixtures()
     {
+        return Fixturedata::getFixtures();
+        /*
         //return ['users' => \app\tests\fixtures\UserFixture::className()];
         return [
             'vereine' => [
@@ -33,6 +36,7 @@ class RolemanagerACest
                 'dataFile' => codecept_data_dir() . 'user.php'
             ],
         ];
+        */
     }    
     
     

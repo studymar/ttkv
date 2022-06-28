@@ -3,6 +3,8 @@
 namespace app\models\vereinsmeldung\vereinskontakte;
 
 use Yii;
+use app\models\kreiskontakte\KreisrolleHasFunktionsgruppe;
+use app\models\kreiskontakte\Kreiskontakt;
 
 /**
  * This is the model class for table "vereinsrolle".
@@ -14,6 +16,9 @@ use Yii;
  *
  * @property Funktionsgruppe $funktionsgruppe
  * @property Vereinskontakt[] $vereinskontakte
+ * @property Vereinskontakt[] $kreiskontakte
+ * @property KreisrolleHasFunktionsgruppe[] $kreisrolleHasFunktionsgruppen
+ * @property Funktionsgruppe[] $mitgliedInKreisausschuessen
  */
 class Vereinsrolle extends \yii\db\ActiveRecord
 {
@@ -75,10 +80,40 @@ class Vereinsrolle extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Vereinskontakt::className(), ['vereinsrolle_id' => 'id']);
     }
+
+    /**
+     * Gets query for [[Kreiskontaktes]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getKreiskontakte()
+    {
+        return $this->hasMany(Kreiskontakt::className(), ['vereinsrolle_id' => 'id']);
+    }
     
     
     /**
-     * Gibt alle Vereinsrollen einer oder mehrerer Funktionsgruppee zurück
+     * Gets query for [[Funktionsgruppes]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getMitgliedInKreisausschuessen()
+    {
+        return $this->hasMany(Funktionsgruppe::className(), ['id' => 'funktionsgruppe_id'])->via('kreisrolleHasFunktionsgruppen');
+    }    
+
+    /**
+     * Gets query for [[KreisrolleHasFunktionsgruppes]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getKreisrolleHasFunktionsgruppen()
+    {
+        return $this->hasMany(KreisrolleHasFunktionsgruppe::className(), ['vereinsrolle_id' => 'id']);
+    }
+    
+    /**
+     * Gibt alle Vereinsrollen einer oder mehrerer Funktionsgruppen zurück
      * @param int $funktionsgruppen_ids
      */
     public static function getVereinsrollen(array $funktionsgruppen_ids = []){

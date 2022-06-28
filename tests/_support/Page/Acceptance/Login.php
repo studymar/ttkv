@@ -19,6 +19,11 @@ class Login
     public $StandardUserFirstname   = "Test";
     public $StandardUserLastname    = "Tester";
 
+    public $EditdataUserFirstname  = "Editdata";
+    public $EditdataUserLastname  = "Editdata";
+    public $EditdataUserEmail = "editdata@ttkv-harburg.de";
+    public $EditdataUserPassword = "test123";
+    
     public $MydataUserFirstname  = "Mydata";
     public $MydataUserLastname  = "Mydata";
     public $MydataUserEmail = "mydata@ttkv-harburg.de";
@@ -72,6 +77,19 @@ class Login
         $I->waitForElement('#account-home-list');
     }
 
+    public function amLoggedInAsEditDataUser()
+    {
+        $I = $this->tester;
+        
+        $I->amOnPage( \yii\helpers\Url::toRoute([self::$URL]));
+        //$I->see('Login', 'h2');
+        $I->fillField("#loginform-email", $this->EditdataUserEmail);
+        $I->fillField("#loginform-password", $this->EditdataUserPassword);
+        $I->click('Login');
+        $I->waitForElement('#account-home-list');
+    }
+    
+    
     public function amLoggedInAsMyDataUser()
     {
         $I = $this->tester;

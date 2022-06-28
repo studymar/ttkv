@@ -1,11 +1,14 @@
 <?php
 
 use yii\helpers\Url;
+use Page\Acceptance\Fixturedata;
 
 class AccountACest
 {
     public function _fixtures()
     {
+        return Fixturedata::getFixtures();
+        /*
         //return ['users' => \app\tests\fixtures\UserFixture::className()];
         return [
             'vereine' => [
@@ -33,6 +36,7 @@ class AccountACest
                 'dataFile' => codecept_data_dir() . 'user.php'
             ],
         ];
+         */
     }    
     
     
@@ -79,14 +83,15 @@ class AccountACest
     
     public function editMydata(AcceptanceTester $I, \Page\Acceptance\Login $IHelper)
     {
-        $IHelper->amLoggedInAsStandard();
+        //$IHelper->amLoggedInAsStandard();
+        $IHelper->amLoggedInAsEditDataUser();
         
         $I->amOnPage( \yii\helpers\Url::toRoute(['/account/mydata']));
         $I->see("Meine Daten",'h2');
 
         $I->expectTo("see my prefilled data in mydata-formular");
-        $I->seeInField('#mydataeditform-firstname', $IHelper->StandardUserFirstname);
-        $I->seeInField('#mydataeditform-lastname', $IHelper->StandardUserLastname);
+        $I->seeInField('#mydataeditform-firstname', $IHelper->EditdataUserFirstname);
+        $I->seeInField('#mydataeditform-lastname', $IHelper->EditdataUserLastname);
         
         $newName = "MydataB";
         $I->fillField("#mydataeditform-lastname", $newName);//changeName

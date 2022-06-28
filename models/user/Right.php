@@ -28,6 +28,7 @@ class Right extends \yii\db\ActiveRecord
     const ID_RIGHT_VEREINSMELDUNG_KONFIGURIEREN = "5";
     const ID_RIGHT_VEREINSKONTAKTE_EINSEHEN     = "6";
     const ID_RIGHT_VEREINSMELDUNGEN_EINSEHEN    = "7";
+    const ID_RIGHT_KREISKONTAKTE_PFLEGEN        = "8";
     
     
     /**

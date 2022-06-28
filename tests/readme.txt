@@ -11,6 +11,7 @@ yii fixture/unload "*"
 To Start Tests:
 vendor\bin\codecept run
 oder vendor\bin\codecept run unit //nur für unit-tests\unit\fixtures
+oder vendor\bin\codecept run acceptance LoginACest
 
 Vorraussetzung:
 XXXFixture - Classes unter tests\fixtures

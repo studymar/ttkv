@@ -129,6 +129,15 @@ class VereinsmeldungKontakte extends \yii\db\ActiveRecord implements IFIsVereins
         }
         return false;
     }
+
+    /**
+     * 
+     * @param type $vereinsmeldung
+     * @return Vereinskontakte|null
+     */
+    public static function findByVereinsmeldung($vereinsmeldung){
+        return VereinsmeldungKontakte::find()->where(['vereinsmeldung_id'=>$vereinsmeldung->id])->one();
+    }
     
     public static function getInstance($vereinsmeldung){
         if(self::$instance)

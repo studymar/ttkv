@@ -18,6 +18,10 @@ body {
   /* min-width: 960px; */
   min-width: auto; }
 
+/* Allgemein */
+.first-item-without-border-bottom li:first-child {
+  border-bottom: 0px !important; }
+
 /* bar oberer Rand */
 #bar {
   background: #151515;
@@ -589,5 +593,12 @@ table tr.locked-user td {
 
 .list-group-item-secondary {
   background: #f8f9fa; }
+
+.person.d-flex div a:before, .person.d-flex div.address:before, .contactdata.d-flex div a:before, .contactdata.d-flex div.address:before {
+  content: " , "; }
+.person.d-flex div:first-child a:before, .contactdata.d-flex div:first-child a:before {
+  content: ""; }
+.person a, .contactdata a {
+  font-weight: normal !important; }
 
 /*# sourceMappingURL=layout.css.map */

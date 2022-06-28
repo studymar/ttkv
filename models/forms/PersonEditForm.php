@@ -5,8 +5,10 @@ use Yii;
 use yii\base\Model;
 use app\models\user\User;
 use app\models\vereinsmeldung\vereinskontakte\Vereinskontakt;
+use app\models\kreiskontakte\Kreiskontakt;
 use app\models\vereinsmeldung\vereinskontakte\VereinsmeldungKontakte;
 use app\models\vereinsmeldung\vereinskontakte\Person;
+use app\models\kreiskontakte\Kreisperson;
 
 class PersonEditForm extends Model {
    public $id;
@@ -20,6 +22,7 @@ class PersonEditForm extends Model {
    public $created_at;
    
    public $vereinsrollen_ids = [];
+   public $funktionsgruppen_ids = [];
  
    public function __construct() {
       
@@ -40,6 +43,8 @@ class PersonEditForm extends Model {
          [['id'], 'integer'],
          [['created_at'], 'safe'],
          [['vereinsrollen_ids'], 'each', 'rule' => ['integer']],
+
+         [['funktionsgruppen_ids'], 'each', 'rule' => ['integer'],'on'=>'kreisperson'],
           
        );
    }
@@ -74,6 +79,24 @@ class PersonEditForm extends Model {
         $this->vereinsrollen_ids = \yii\helpers\ArrayHelper::map($item->vereinskontakte,'id','vereinsrolle_id');
         
     }   
+
+    public function mapFromKreisperson($item)
+    {
+        $this->id           = $item->id;
+        $this->firstname    = $item->firstname;
+        $this->lastname     = $item->lastname;
+        $this->street       = $item->street;
+        $this->zip          = $item->zip;
+        $this->city         = $item->city;
+        $this->email        = $item->email;
+        $this->phone        = $item->phone;
+        $this->created_at   = $item->created_at;
+        
+        $this->vereinsrollen_ids = \yii\helpers\ArrayHelper::map($item->kreiskontakte,'id','vereinsrolle_id');
+        
+    }   
+    
+    
     public function mapToPerson($item)
     {
         $item->id           = $this->id;
@@ -106,5 +129,24 @@ class PersonEditForm extends Model {
         return Vereinskontakt::saveVereinsrollen($person, $vereinsmeldungKontakte, $this->vereinsrollen_ids);
     }   
     
+    /**
+     * 
+     * @param Kreisperson $person
+     * @return boolean
+     */
+    public function saveKreisrollen(Kreisperson $person)
+    {
+        //alte löschen
+        //neue hinzufügen
+        Yii::debug(json_encode($this->vereinsrollen_ids));
+        //wenn vereinsrollen_ids leerer String, ein leeres array draus machen
+        if(!is_array($this->vereinsrollen_ids)){
+            $this->vereinsrollen_ids = [];
+        }
+        if(!is_array($this->funktionsgruppen_ids)){
+            $this->funktionsgruppen_ids = [];
+        }
+        return Kreiskontakt::saveVereinsrollen($person, $this->vereinsrollen_ids);
+    }   
    
 }
